@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Output, EventEmitter} from '@angular/core';
 
 @Component({
   selector: 'app-company-name-box',
@@ -7,9 +7,9 @@ import { Component } from '@angular/core';
 })
 export class CompanyNameBoxComponent {
 
-    protected name: string = '';
-
+  @Output() nameEvent: EventEmitter<string> = new EventEmitter();
+  name: string = '';
     getName() {
-      return this.name;
+      this.nameEvent.emit(this.name)
     }
 }

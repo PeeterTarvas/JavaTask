@@ -22,6 +22,4 @@ public class SectorDbo {
     private String sectorName;
     @Column(name = "sector_parent_id")
     private Integer sectorParentId;
-    @Column(name = "depth")
-    private Integer depth;
 }

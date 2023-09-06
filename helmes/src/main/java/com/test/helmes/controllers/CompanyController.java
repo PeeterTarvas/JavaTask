@@ -9,7 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 @RestController
+@RequestMapping("/company")
 public class CompanyController {
 
     private final CompanyService companyService;
@@ -19,14 +23,22 @@ public class CompanyController {
         this.companyService = companyService;
     }
 
-    @PutMapping("/save")
+    @PostMapping("/save")
     public ResponseEntity<?> saveCompany(@RequestBody CompanyDto companyDto) {
+        ResponseEntity<?> resp;
         try {
-            companyService.saveCompany(companyDto);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+          companyService.saveCompany(companyDto);
+          resp = ResponseEntity.status(HttpStatus.CREATED).body("Created: " + companyDto.getCompanyName());
+          return resp;
         } catch (InvalidDataException e) {
             ErrorResponse errorResponse = new ErrorResponse("Invalid data", e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(errorResponse);        }
+            resp = ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(errorResponse);
+            return resp;
+        }
+    }
+    @GetMapping("/getAll")
+    public List<CompanyDto> getAll() {
+        return companyService.getAll();
     }
 
 }

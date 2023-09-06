@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {ConnectionService} from "../services/connection.service";
 import {SectorDto} from "../dtos/sector-dto";
 import {map} from "rxjs";
@@ -9,14 +9,18 @@ import {map} from "rxjs";
   styleUrls: ['./selector-select.component.css']
 })
 export class SelectorSelectComponent {
-  selectedSectors: number[] = []; // Store the selected sector values
-  sectors: SectorDto[] = [];
+  sectors : SectorDto[] = [];
   private connectionService: ConnectionService
+  protected selectedSector: SectorDto | undefined;
+  @Output() selectedSectorEvent: EventEmitter<SectorDto> = new EventEmitter();
 
   constructor(connectionService: ConnectionService) {
     this.connectionService = connectionService;
   }
 
+  getSelectedSector() {
+    this.selectedSectorEvent.emit(this.selectedSector)
+  }
   ngOnInit() {
     this.connectionService.get("sector/getAll").pipe(
       map(

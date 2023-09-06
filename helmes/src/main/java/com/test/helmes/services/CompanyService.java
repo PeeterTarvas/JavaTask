@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CompanyService {
 
@@ -28,6 +30,10 @@ public class CompanyService {
             } else {
                 throw new InvalidDataException("Missing input");
             }
+    }
+
+    public List<CompanyDto> getAll() {
+        return companyRepository.findAll().stream().map(this::convertToCompanyDto).toList();
     }
 
     private boolean isValid(CompanyDto companyDto) {
@@ -48,7 +54,7 @@ public class CompanyService {
                 .build();
     }
 
-    private CompanyDto convertToCompanyDto(CompanyDto companyDbo) {
+    private CompanyDto convertToCompanyDto(CompanyDbo companyDbo) {
         return CompanyDto.builder()
                 .companyName(companyDbo.getCompanyName())
                 .companySectorId(companyDbo.getCompanySectorId())
