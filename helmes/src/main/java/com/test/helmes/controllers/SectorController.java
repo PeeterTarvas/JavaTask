@@ -16,6 +16,9 @@ public class SectorController {
     @Autowired
     SectorService sectorService;
 
+    /**
+     * @return all the sectors in the database.
+     */
     @GetMapping("/getAll")
     public List<SectorDto> getSectors() {
             return sectorService.getSectorDtos();

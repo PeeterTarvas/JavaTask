@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Api end point for all the methods that are related to the company objects logic.
+ */
 @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 @RestController
 @RequestMapping("/company")
@@ -23,6 +26,9 @@ public class CompanyController {
         this.companyService = companyService;
     }
 
+    /**
+     * Saves the company, if company doesn't have valid attributes or already exists then throws an exception.
+     */
     @PostMapping("/save")
     public ResponseEntity<?> saveCompany(@RequestBody CompanyDto companyDto) {
         ResponseEntity<?> resp;
@@ -36,6 +42,10 @@ public class CompanyController {
             return resp;
         }
     }
+
+    /**
+     * @return all the company's in the database
+     */
     @GetMapping("/getAll")
     public List<CompanyDto> getAll() {
         return companyService.getAll();

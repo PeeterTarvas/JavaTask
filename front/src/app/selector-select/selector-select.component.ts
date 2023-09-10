@@ -52,6 +52,10 @@ export class SelectorSelectComponent {
     return parentSector ? parentSector.sectorName : '';
   }
 
+  /**
+   * Breath-first search with while loop
+   * Search all the nodes if it is the searched sector
+   */
   getSectorDepthFromRoot(rootId: number, sectorId: number): number | null {
     const queue: { id: number; depth: number }[] = [{ id: rootId, depth: 0 }];
 
@@ -73,6 +77,18 @@ export class SelectorSelectComponent {
     return null;
   }
 
+  /**
+   * To make the sector and the sector structure work visually
+   * we need to find what is the parent-child relationship depth for all the sectors
+   *
+   * This is done by finding all the root sectors - whose parent === null -
+   * and then traversing those sector trees with Breath-First Search.
+   * BFS is slow but in this case we won't have small trees so no need to worry.
+   * Method does BFS for all the trees and finds the element depth from the multiple trees.
+   * The tree root nodes here are called roots as well.
+   * We use a helper method getSectorDepthFromRoot, which is BFS itself,
+   * to find if sector exists in that tree and the depth of that sector.
+   */
   getSectorDepth(sectorId: number): number {
     let depth: number | null = null; // Initialize depth as null
 

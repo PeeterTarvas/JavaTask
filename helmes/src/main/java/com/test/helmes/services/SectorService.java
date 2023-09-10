@@ -17,19 +17,18 @@ public class SectorService {
     @Autowired
     private SectorRepository sectorRepository;
 
+    @Autowired
+    private ConverterService converterService;
 
+    /**
+     * @return all the sectors in the database,
+     * is used for fetching the sector-select components options in the front-end part
+     */
     public List<SectorDto> getSectorDtos() {
         return sectorRepository.findAll()
                 .stream()
-                .map(this::convertToDto)
+                .map(x -> converterService.convertToSectorDto(x))
                 .collect(Collectors.toList());
     }
 
-    private SectorDto convertToDto(SectorDbo sectorDbo) {
-        return SectorDto.builder()
-                .sectorName(sectorDbo.getSectorName())
-                .sectorId(sectorDbo.getSectorId())
-                .sectorParentId(sectorDbo.getSectorParentId())
-                .build();
-    }
 }

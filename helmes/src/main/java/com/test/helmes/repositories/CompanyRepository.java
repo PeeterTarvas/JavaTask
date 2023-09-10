@@ -10,9 +10,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CompanyRepository extends JpaRepository<CompanyDbo, Integer> {
 
-    default <S extends CompanyDbo> S saveCompany(S companyDbo) {
+    /**
+     * This method tries to save the company in the database and
+     * if it doesn't work then throws an exception that the data already exists
+     */
+    default <S extends CompanyDbo> void saveCompany(S companyDbo) {
         try {
-            return saveAndFlush(companyDbo);
+            saveAndFlush(companyDbo);
         } catch (DataIntegrityViolationException ex) {
             throw new NoDataExistsException("Company name already exists: " + companyDbo.getCompanyName());
         }
