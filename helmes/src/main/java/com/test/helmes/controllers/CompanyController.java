@@ -28,7 +28,7 @@ public class CompanyController {
         ResponseEntity<?> resp;
         try {
           companyService.saveCompany(companyDto);
-          resp = ResponseEntity.status(HttpStatus.CREATED).body("Created: " + companyDto.getCompanyName());
+          resp = ResponseEntity.status(HttpStatus.CREATED).body("{\"message\": \"Created: " + companyDto.getCompanyName() + "\"}");;
           return resp;
         } catch (InvalidDataException e) {
             ErrorResponse errorResponse = new ErrorResponse("Invalid data", e.getMessage());

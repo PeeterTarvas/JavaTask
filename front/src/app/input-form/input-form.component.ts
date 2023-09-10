@@ -35,7 +35,6 @@ export class InputFormComponent {
   }
   submit() {
     let company: CompanyDto = this.createCompanyDto();
-    console.log(company)
     this.connectionService.post('company/save', company)
   }
 
