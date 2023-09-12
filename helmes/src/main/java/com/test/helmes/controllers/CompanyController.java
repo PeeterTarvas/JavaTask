@@ -14,7 +14,6 @@ import java.util.List;
 /**
  * Api end point for all the methods that are related to the company objects logic.
  */
-@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 @RestController
 @RequestMapping("/company")
 public class CompanyController {
@@ -32,6 +31,7 @@ public class CompanyController {
     @PostMapping("/save")
     public ResponseEntity<?> saveCompany(@RequestBody CompanyDto companyDto) {
         ResponseEntity<?> resp;
+        System.out.println();
         try {
           companyService.saveCompany(companyDto);
           resp = ResponseEntity.status(HttpStatus.CREATED).body("{\"message\": \"Created: " + companyDto.getCompanyName() + "\"}");;

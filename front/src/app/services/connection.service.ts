@@ -21,7 +21,7 @@ export class ConnectionService {
 
   public post(api_path: String, companyDto: CompanyDto) {
     let post = this.apiEndPoint + api_path;
-    let res = this.httpClient.post(post, companyDto)
+    let res = this.httpClient.post(post, companyDto,  { withCredentials: true })
     res.subscribe(r => console.log(r))
   }
 }
