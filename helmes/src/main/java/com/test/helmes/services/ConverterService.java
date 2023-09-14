@@ -2,8 +2,10 @@ package com.test.helmes.services;
 
 import com.test.helmes.dbos.CompanyDbo;
 import com.test.helmes.dbos.SectorDbo;
+import com.test.helmes.dbos.UserDbo;
 import com.test.helmes.dtos.CompanyDto;
 import com.test.helmes.dtos.SectorDto;
+import com.test.helmes.dtos.UserDto;
 import org.springframework.stereotype.Service;
 
 /**
@@ -35,5 +37,16 @@ public class ConverterService {
                 .sectorId(sectorDbo.getSectorId())
                 .sectorParentId(sectorDbo.getSectorParentId())
                 .build();
+    }
+
+    public UserDbo convertToUserDbo(UserDto userDto) {
+        return UserDbo.builder()
+                .username(userDto.getUsername())
+                .password(userDto.getPassword())
+                .build();
+    }
+
+    public UserDto convertToUserDto(UserDbo userDbo) {
+        return new UserDto(userDbo.getUsername(), userDbo.getPassword(), null);
     }
 }
