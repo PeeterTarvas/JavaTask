@@ -10,10 +10,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -37,7 +34,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private UsernamePasswordAuthenticationToken buildAuthToken(UserDetails userDetails, HttpServletRequest request) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails((jakarta.servlet.http.HttpServletRequest) request));
+        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         return authenticationToken;
     }
 
@@ -61,7 +58,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response, jakarta.servlet.FilterChain filterChain) throws jakarta.servlet.ServletException, IOException {
         // Get token form request
-        Optional<String> token = getToken((HttpServletRequest) request);
+        Optional<String> token = getToken(request);
         System.out.println(token);
         if (token.isEmpty()) {
             filterChain.doFilter(request, response);
@@ -79,7 +76,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             UserDetails userDetails =  this.userDetails.loadUserByUsername(username);
             if (jwtTokenProvider.isValid(token.get(), userDetails.getUsername())) {
                 // If token is valid, tell security that everything is ok
-                UsernamePasswordAuthenticationToken authenticationToken = buildAuthToken(userDetails, (HttpServletRequest) request);
+                UsernamePasswordAuthenticationToken authenticationToken = buildAuthToken(userDetails, request);
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }

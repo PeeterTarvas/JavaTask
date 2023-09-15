@@ -14,12 +14,15 @@ import java.util.List;
 @Service
 public class CompanyService {
 
-    @Autowired
     private CompanyRepository companyRepository;
 
-    @Autowired
     private ConverterService converterService;
 
+    @Autowired
+    public CompanyService(CompanyRepository companyRepository, ConverterService converterService) {
+        this.companyRepository = companyRepository;
+        this.converterService = converterService;
+    }
     /**
      * saveCompany method is a service method that saves the company, if valid, with the help of repository.
      * If companyDto's attributes are all valid then it will be saved through the companyRepository method.

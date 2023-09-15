@@ -25,7 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(securedEnabled = true) // secureEnabled make spring use @Secured
 public class SecurityConfig {
 
-    private JwtRequestFilter jwtRequestFilter;
+    private final JwtRequestFilter jwtRequestFilter;
     private final RestAuthenticationEntryPoint authenticationEntryPoint;
     private final UserDetailsService myUserDetailsService;
 
@@ -41,14 +41,14 @@ public class SecurityConfig {
         return http
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests( auth -> auth
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/company/**").permitAll()
                         .requestMatchers("/user/**").permitAll()
                         .requestMatchers("/sector/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                //.oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
+                .exceptionHandling((e) -> e.authenticationEntryPoint(authenticationEntryPoint))
                 .build();
     }
 

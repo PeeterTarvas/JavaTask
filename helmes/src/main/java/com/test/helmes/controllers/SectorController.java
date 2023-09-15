@@ -13,8 +13,11 @@ import java.util.List;
 @RequestMapping("/sector")
 public class SectorController {
 
-    @Autowired
     SectorService sectorService;
+
+    public SectorController(SectorService sectorService) {
+        this.sectorService = sectorService;
+    }
 
     /**
      * @return all the sectors in the database.
