@@ -18,8 +18,10 @@ public class SectorDbo {
     @Id
     @Column(name = "sector_id")
     private Integer sectorId;
+
     @Column(name = "sector_name")
     private String sectorName;
+
     @Column(name = "sector_parent_id")
     private Integer sectorParentId;
 }

@@ -1,7 +1,6 @@
 package com.test.helmes.services;
 
 
-import com.test.helmes.dbos.SectorDbo;
 import com.test.helmes.dtos.SectorDto;
 import com.test.helmes.repositories.SectorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +13,16 @@ import java.util.stream.Collectors;
 public class SectorService {
 
 
-    @Autowired
     private SectorRepository sectorRepository;
 
-    @Autowired
     private ConverterService converterService;
+
+    @Autowired
+    public SectorService(SectorRepository sectorRepository, ConverterService converterService) {
+        this.sectorRepository = sectorRepository;
+        this.converterService = converterService;
+    }
+
 
     /**
      * @return all the sectors in the database,
