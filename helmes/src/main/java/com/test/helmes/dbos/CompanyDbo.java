@@ -19,10 +19,13 @@ public class CompanyDbo {
     @Column(name = "company_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long companyId;
+
     @Column(name = "company_name")
     private String companyName;
+
     @Column(name = "company_sector_id")
     private Integer companySectorId;
+
     @Column(name = "company_terms")
     private Boolean companyTerms;
 }

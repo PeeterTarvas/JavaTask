@@ -10,6 +10,7 @@ import com.test.helmes.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,7 +42,9 @@ public class UserService {
     public void register(UserDto userDto) throws InvalidDataException {
         if (isValidUser(userDto)) {
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-            UserDbo userDbo = converterService.convertToUserDbo(userDto);
+            UserDbo userDbo = new UserDbo();
+            userDbo.setUsername(userDto.getUsername());
+            userDbo.setPassword(userDto.getPassword());
             try {
                 userRepository.saveAndFlush(userDbo);
             } catch (DataAccessException ex) {
@@ -52,17 +55,21 @@ public class UserService {
         }
     }
 
-    public LoginResponseDto login(UserDto userDto) {
+    public LoginResponseDto login(UserDto userDto) throws InvalidDataException {
         if (isValidUser(userDto)) {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            userDto.getUsername(), userDto.getPassword()));
+            Authentication authentication;
+            try {
+                 authentication = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                userDto.getUsername(), userDto.getPassword()));
+            } catch (BadCredentialsException e) {
+                throw new InvalidDataException("Bad credentials");
+            }
             UserDto principle = (UserDto) authentication.getPrincipal();
             String token = jwtTokenProvider.generateToken(principle.getUsername());
             return new LoginResponseDto(principle.getUsername(), token);
         } else {
-            // should be exception
-            return null;
+            throw new InvalidDataException("Wrong username or password");
         }
     }
 
