@@ -1,27 +1,26 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {CompanyDto} from "../dtos/company-dto";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConnectionService {
 
-  apiEndPoint: string = 'http://localhost:8080/';
+  protected apiEndPoint: string = 'http://localhost:8080/';
 
-  constructor(private httpClient: HttpClient) {
-    this.httpClient = httpClient;
-
+  constructor(protected httpClient: HttpClient) {
   }
 
-  public get(api_path: String) {
+  public get(api_path: string, body: any): Observable<any> {
     let get = this.apiEndPoint + api_path;
-    return this.httpClient.get(get);
+    return this.httpClient.get(get, body);
   }
 
-  public post(api_path: String, companyDto: CompanyDto) {
+  public post(api_path: string, dto: any): any {
     let post = this.apiEndPoint + api_path;
-    let res = this.httpClient.post(post, companyDto,  { withCredentials: true })
-    res.subscribe(r => console.log(r))
+    let resp: any;
+    this.httpClient.post(post, dto, {withCredentials: true}).subscribe(r => resp = r)
+    return resp;
   }
 }

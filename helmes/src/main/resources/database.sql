@@ -13,7 +13,9 @@ CREATE TABLE helmes.company (
     company_name varchar(255),
     company_sector_id integer NOT NULL,
     company_terms boolean NOT NULL,
-    FOREIGN KEY (company_sector_id) REFERENCES helmes.sector(sector_id)  ON UPDATE CASCADE
+    FOREIGN KEY (company_sector_id) REFERENCES helmes.sector(sector_id)  ON UPDATE CASCADE,
+    CONSTRAINT AK_company_name UNIQUE (company_name)
+
 );
 
 CREATE TABLE helmes.user (

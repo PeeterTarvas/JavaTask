@@ -31,7 +31,6 @@ public class CompanyController {
     @PostMapping("/save")
     public ResponseEntity<?> saveCompany(@RequestBody CompanyDto companyDto) {
         ResponseEntity<?> resp;
-        System.out.println();
         try {
           companyService.saveCompany(companyDto);
           resp = ResponseEntity.status(HttpStatus.CREATED).body("{\"message\": \"Created: " + companyDto.getCompanyName() + "\"}");;
