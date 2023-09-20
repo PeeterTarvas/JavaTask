@@ -34,7 +34,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\": \"Created: " + userDto.getUsername() + "\"}");
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserDto userDto) {
         try {
             LoginResponseDto loginResponseDto =  userService.login(userDto);

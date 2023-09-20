@@ -1,0 +1,29 @@
+<div class="register-wrapper" fxLayout="row" fxLayoutAlign="center center">
+
+  <mat-card class="box">
+    <mat-card-header>
+      <mat-card-title>Register</mat-card-title>
+    </mat-card-header>
+
+    <form [formGroup]="registerForm" novalidate (ngSubmit)="onSubmit()" class="example-form">
+      <mat-card-content>
+        <mat-form-field class="example-full-width">
+          <label for="username">Username</label>
+          <input matInput type="text" id="username" formControlName="username"/>
+          <mat-error *ngIf="hasError('username', 'required')">Name is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width">
+          <label for="password">Password</label>
+          <input matInput type="password" id="password" formControlName="password"/>
+          <mat-error *ngIf="hasError('password', 'required')">Password is required</mat-error>
+          <mat-error *ngIf="hasError('password', 'required')">Password must be at least 4 characters</mat-error>
+        </mat-form-field>
+      </mat-card-content>
+      <button mat-stroked-button color="primary" class="btn-block">Register</button>
+      <button routerLink="/" mat-stroked-button color="accent" class="btn-block">Cancel</button>
+    </form>
+  </mat-card>
+
+</div>
+

@@ -1,0 +1,18 @@
+<div>
+  <label for="sectors">Sectors:</label>
+  <select (change)="getSelectedSector()" id="sectors" [(ngModel)]="selectedSector">
+    <option value="" disabled selected>Select a sector</option>
+    <ng-container *ngFor="let sectorGroup of groupedSectors | keyvalue">
+      <span *ngFor="let _ of [].constructor(getSectorDepth(sectorGroup.key));">&nbsp;</span>
+      <optgroup label="{{ getSectorName(sectorGroup.key) }}">
+            <ng-container *ngFor="let sector of sectorGroup.value">
+              <ng-container *ngIf="!groupedSectors.has(sector.sectorId)">
+                <option [ngValue]="sector">
+                  <span *ngFor="let _ of [].constructor(getSectorDepth(sector.sectorId))">&nbsp;</span>{{sector.sectorName}}
+                </option>
+              </ng-container>
+            </ng-container>
+        </optgroup>
+    </ng-container>
+  </select>
+</div>
