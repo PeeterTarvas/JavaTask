@@ -35,12 +35,18 @@ export class InputFormComponent {
   }
   submit() {
     let company: CompanyDto = this.createCompanyDto();
-    this.connection.post('save', company).then( (response) =>
+    let username: String = sessionStorage.getItem('username')!;
+    this.connection.post(username +'/save', company).then( (response) =>
       {
-        this.message = response;
-      }
-    )
-  }
+        if (response && response.message) {
+          this.message = response.message;
+        }
+      })
+      .catch((error: any) => {
+          this.message = 'Bad request. Please check your input data.';
+      });
+    }
+
 
 
 }

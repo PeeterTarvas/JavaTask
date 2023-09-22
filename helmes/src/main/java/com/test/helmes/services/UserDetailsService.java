@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
@@ -21,10 +23,10 @@ public class UserDetailsService implements org.springframework.security.core.use
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDbo userDbo = userRepository.getUserDboByUsername(username);
-        if (userDbo == null) {
+        Optional<UserDbo> userDbo = userRepository.getUserDboByUsername(username);
+        if (userDbo.isEmpty()) {
             throw new UsernameNotFoundException("No user found");
         }
-        return converterService.convertToUserDto(userDbo);
+        return converterService.convertToUserDto(userDbo.get());
     }
 }

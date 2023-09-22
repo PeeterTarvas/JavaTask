@@ -28,17 +28,18 @@ public class CompanyController {
     /**
      * Saves the company, if company doesn't have valid attributes or already exists then throws an exception.
      */
-    @PostMapping("/save")
-    public ResponseEntity<?> saveCompany(@RequestBody CompanyDto companyDto) {
-        ResponseEntity<?> resp;
+    @PostMapping("/{username}/save")
+    public ResponseEntity<?> saveCompany(@RequestBody CompanyDto companyDto, @PathVariable String username) {
         try {
-          companyService.saveCompany(companyDto);
-          resp = ResponseEntity.status(HttpStatus.CREATED).body("{\"message\": \"Created: " + companyDto.getCompanyName() + "\"}");;
-          return resp;
+            boolean companyUpdated = companyService.saveCompany(username, companyDto);
+            if (companyUpdated) {
+                return ResponseEntity.status(HttpStatus.OK).body("{\"message\": \"Updated company: " + companyDto.getCompanyName() + "\"}");
+            } else {
+                return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\": \"Created company: " + companyDto.getCompanyName() + "\"}");
+            }
         } catch (InvalidDataException e) {
             ErrorResponse errorResponse = new ErrorResponse("Invalid data", e.getMessage());
-            resp = ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(errorResponse);
-            return resp;
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(errorResponse);
         }
     }
 

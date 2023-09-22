@@ -7,6 +7,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface CompanyRepository extends JpaRepository<CompanyDbo, Integer> {
 
@@ -21,4 +23,7 @@ public interface CompanyRepository extends JpaRepository<CompanyDbo, Integer> {
             throw new NoDataExistsException("Company name already exists: " + companyDbo.getCompanyName());
         }
     }
+
+    Optional<CompanyDbo> getCompanyDboByCompanyName(String companyName);
+
 }

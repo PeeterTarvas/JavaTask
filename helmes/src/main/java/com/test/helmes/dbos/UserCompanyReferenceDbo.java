@@ -20,9 +20,9 @@ public class UserCompanyReferenceDbo {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    private UserDbo userId;
+    private UserDbo userReference;
 
     @OneToOne
     @JoinColumn(name = "company_id")
-    private CompanyDbo companyId;
+    private CompanyDbo companyReference;
 }

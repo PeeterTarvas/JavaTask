@@ -2,6 +2,7 @@ package com.test.helmes.services;
 
 import com.test.helmes.dbos.CompanyDbo;
 import com.test.helmes.dbos.SectorDbo;
+import com.test.helmes.dbos.UserCompanyReferenceDbo;
 import com.test.helmes.dbos.UserDbo;
 import com.test.helmes.dtos.CompanyDto;
 import com.test.helmes.dtos.SectorDto;
@@ -49,5 +50,13 @@ public class ConverterService {
 
     public UserDto convertToUserDto(UserDbo userDbo) {
         return new UserDto(userDbo.getUsername(), userDbo.getPassword(), null);
+    }
+
+    public UserCompanyReferenceDbo createUserCompanyReferenceDbo(UserDbo user, CompanyDbo company) {
+        return UserCompanyReferenceDbo.builder()
+                .userReference(user)
+                .companyReference(company)
+                .build();
+
     }
 }
