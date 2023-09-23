@@ -16,6 +16,7 @@ import {MatCardModule} from "@angular/material/card";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import { RegisterComponent } from './components/register/register.component';
+import {MatRadioModule} from "@angular/material/radio";
 
 
 @NgModule({
@@ -28,17 +29,18 @@ import { RegisterComponent } from './components/register/register.component';
     LoginPageComponent,
     RegisterComponent
   ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpClientModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatCardModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatButtonModule
-  ],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        HttpClientModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatCardModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatButtonModule,
+        MatRadioModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

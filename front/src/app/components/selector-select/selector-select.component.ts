@@ -11,7 +11,7 @@ import {SectorWebRequestServiceService} from "../../services/sector-web-request-
 })
 export class SelectorSelectComponent implements OnInit {
   sectors : SectorDto[] = [];
-  @Input() selectedSector: SectorDto | undefined;
+  selectedSector: SectorDto | undefined;
   protected groupedSectors: Map<number, SectorDto[]> = new Map();
   private roots: number[] = [];
   @Output() selectedSectorEvent: EventEmitter<SectorDto> = new EventEmitter();
@@ -25,6 +25,7 @@ export class SelectorSelectComponent implements OnInit {
 
   setSelectedSector(sectorId: number) {
     this.selectedSector =  this.sectors.find(x => x.sectorId === sectorId)
+    return this.selectedSector;
   }
 
   private groupSectorsByParent() {

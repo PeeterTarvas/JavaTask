@@ -1,7 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {SectorDto} from "../../dtos/sector-dto";
 import {CompanyDto} from "../../dtos/company-dto";
 import {CompanyWebRequestServiceService} from "../../services/company-web-request-service.service";
+import {SelectorSelectComponent} from "../selector-select/selector-select.component";
+import {AuthenticationService} from "../../services/authentication.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-input-form',
@@ -14,8 +17,12 @@ export class InputFormComponent implements OnInit {
     terms: boolean = false;
     message: string | undefined;
     sectorId: number | undefined;
+    @ViewChild(SelectorSelectComponent, { static: false }) selectorSelectComponent: SelectorSelectComponent | undefined;
 
-  constructor(private connection: CompanyWebRequestServiceService) {
+
+  constructor(private connection: CompanyWebRequestServiceService,
+              private authService: AuthenticationService,
+              private router: Router) {
   }
   getName(name: string) {
       this.name = name;
@@ -49,6 +56,11 @@ export class InputFormComponent implements OnInit {
     });
   }
 
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+
   submit() {
     let company: CompanyDto = this.createCompanyDto();
     let username: String = sessionStorage.getItem('username')!;
@@ -67,7 +79,10 @@ export class InputFormComponent implements OnInit {
     const company = await this.getUserCompany();
     this.name = company.companyName;
     this.terms = company.companyTerms;
-    this.sectorId = company.companySectorId;
+    this.sectorId = company.companySectorId
+    if (this.selectorSelectComponent) {
+      this.sector = this.selectorSelectComponent.setSelectedSector(this.sectorId);
+    }
   }
 
 
