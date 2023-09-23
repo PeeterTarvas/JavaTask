@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ConnectionService} from "../../services/connection.service";
 import {SectorDto} from "../../dtos/sector-dto";
 import {map} from "rxjs";
@@ -9,9 +9,9 @@ import {SectorWebRequestServiceService} from "../../services/sector-web-request-
   templateUrl: './selector-select.component.html',
   styleUrls: ['./selector-select.component.css']
 })
-export class SelectorSelectComponent  implements OnInit {
+export class SelectorSelectComponent implements OnInit {
   sectors : SectorDto[] = [];
-  protected selectedSector: SectorDto | undefined;
+  @Input() selectedSector: SectorDto | undefined;
   protected groupedSectors: Map<number, SectorDto[]> = new Map();
   private roots: number[] = [];
   @Output() selectedSectorEvent: EventEmitter<SectorDto> = new EventEmitter();
@@ -21,6 +21,10 @@ export class SelectorSelectComponent  implements OnInit {
 
   getSelectedSector() {
     this.selectedSectorEvent.emit(this.selectedSector)
+  }
+
+  setSelectedSector(sectorId: number) {
+    this.selectedSector =  this.sectors.find(x => x.sectorId === sectorId)
   }
 
   private groupSectorsByParent() {
@@ -91,18 +95,15 @@ export class SelectorSelectComponent  implements OnInit {
    * to find if sector exists in that tree and the depth of that sector.
    */
   getSectorDepth(sectorId: number): number {
-    let depth: number | null = null; // Initialize depth as null
+    let depth: number | null = null;
 
     this.roots.forEach((root: number) => {
       const rootDepth = this.getSectorDepthFromRoot(root, sectorId);
       if (rootDepth !== null) {
-        depth = rootDepth; // Update depth if sector is found in any of the roots
+        depth = rootDepth;
       }
     });
 
-    return depth !== null ? depth * 3 : 0; // Return depth or -1 if sector is not found
+    return depth !== null ? depth * 3 : 0;
   }
-
-  protected readonly parseInt = parseInt;
-  protected readonly String = String;
 }

@@ -84,6 +84,19 @@ public class CompanyService {
         userCompanyReferenceRepository.save(converterService.createUserCompanyReferenceDbo(userDbo, company.get()));
     }
 
+    public Optional<CompanyDto> getUsersCompany(String username) {
+        Optional<UserDbo> userDbo = userRepository.getUserDboByUsername(username);
+        if (userDbo.isPresent()) {
+            Optional<UserCompanyReferenceDbo> userCompanyReferenceDbo = userCompanyReferenceRepository
+                    .getUserCompanyReferenceDboByUserReference(userDbo.get());
+            if (userCompanyReferenceDbo.isPresent()) {
+                return Optional.of(
+                        converterService.convertToCompanyDto(userCompanyReferenceDbo.get().getCompanyReference()));
+            }
+        }
+        return Optional.empty();
+    }
+
     /**
      * @return all the companies, this is for checking the database from back-end
      */

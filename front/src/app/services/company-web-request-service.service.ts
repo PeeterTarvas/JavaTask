@@ -17,8 +17,8 @@ export class CompanyWebRequestServiceService extends ConnectionService {
   }
 
 
-  override async get(api_path: string, body: any): Promise<Observable<CompanyDto>> {
-    return await super.get(this.apiEndPoint + api_path, body);
+  override async get(api_path: string, body?: any): Promise<Observable<CompanyDto>> {
+    return await super.get(api_path, body);
   }
 
   override post(api_path: string, dto: any): Promise<any> {

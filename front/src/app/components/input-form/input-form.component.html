@@ -1,8 +1,8 @@
 <div>
   <h2>Please enter your name and pick the Sectors you are currently involved in.</h2>
-  <app-company-name-box (nameEvent)="getName($event)"/>
-  <app-selector-select (selectedSectorEvent)="getSector($event)"/>
-  <app-terms (isCheckedEvent)="getTerms($event)"/>
+  <app-company-name-box [name]="name" (nameEvent)="getName($event)"/>
+  <app-selector-select [selectedSector]="" (selectedSectorEvent)="getSector($event)"/>
+  <app-terms [isChecked] = "terms" (isCheckedEvent)="getTerms($event)"/>
   <input (click)="submit()" type="submit" value="Save">
   <mat-error *ngIf="message">{{ message }}</mat-error>
 </div>

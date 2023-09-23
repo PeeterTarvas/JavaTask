@@ -13,9 +13,13 @@ export class ConnectionService {
   constructor(protected httpClient: HttpClient) {
   }
 
-  async get(api_path: string, body: any): Promise<any> {
+  async get(api_path: string, body?: any): Promise<any> {
     let get = this.apiEndPoint + api_path;
-    return this.httpClient.get(get, body);
+    if (body) {
+      return this.httpClient.get(get, body);
+    }
+    return this.httpClient.get(get);
+
   }
 
   async post(api_path: string, dto: any): Promise<any> {

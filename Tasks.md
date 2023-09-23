@@ -6,10 +6,10 @@ Tasks:
    2.2. Compose the "Sectors" selectbox using data from database - need to make child/parent logic work
 
 3. Perform the following activities after the "Save" button has been pressed:
-   3.1. Validate all input data (all fields are mandatory) - made but company repo needs to have a fix
-   3.2. Store all input data to the database (Name, Sectors, Agree to terms) - debug if company already exists then repo will throw error
+   3.1. Validate all input data (all fields are mandatory)
+   3.2. Store all input data to the database (Name, Sectors, Agree to terms)
    3.3. Refill the form using stored data - need to add user logic - then reload thse users company
-   3.4. Allow the user to edit his/her own data during the session - puts by the user
+   3.4. Allow the user to edit his/her own data during the session 
 
 
 

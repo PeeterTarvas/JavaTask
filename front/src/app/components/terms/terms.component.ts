@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
   selector: 'app-terms',
@@ -6,7 +6,7 @@ import {Component, EventEmitter, Output} from '@angular/core';
   styleUrls: ['./terms.component.css']
 })
 export class TermsComponent {
-   isChecked: boolean = false;  // Boolean flag
+  @Input() isChecked: boolean = false;  // Boolean flag
 
   @Output() isCheckedEvent: EventEmitter<boolean> = new EventEmitter();
   getIsChecked() {

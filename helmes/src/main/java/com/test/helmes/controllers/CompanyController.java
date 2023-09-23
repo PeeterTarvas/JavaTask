@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Api end point for all the methods that are related to the company objects logic.
@@ -41,6 +42,15 @@ public class CompanyController {
             ErrorResponse errorResponse = new ErrorResponse("Invalid data", e.getMessage());
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(errorResponse);
         }
+    }
+
+    @GetMapping("/{username}/get")
+    public ResponseEntity<?> getUsersCompany(@PathVariable String username) {
+        Optional<CompanyDto> companyDto = companyService.getUsersCompany(username);
+        if (companyDto.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(companyDto.get());
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     /**

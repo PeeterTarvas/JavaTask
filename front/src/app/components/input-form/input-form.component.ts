@@ -1,7 +1,6 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {SectorDto} from "../../dtos/sector-dto";
 import {CompanyDto} from "../../dtos/company-dto";
-import {ConnectionService} from "../../services/connection.service";
 import {CompanyWebRequestServiceService} from "../../services/company-web-request-service.service";
 
 @Component({
@@ -9,11 +8,12 @@ import {CompanyWebRequestServiceService} from "../../services/company-web-reques
   templateUrl: './input-form.component.html',
   styleUrls: ['./input-form.component.css']
 })
-export class InputFormComponent {
+export class InputFormComponent implements OnInit {
     name: string = "";
     sector: SectorDto | undefined = undefined;
     terms: boolean = false;
     message: string | undefined;
+    sectorId: number | undefined;
 
   constructor(private connection: CompanyWebRequestServiceService) {
   }
@@ -33,6 +33,22 @@ export class InputFormComponent {
       companyTerms: this.terms
     };
   }
+
+  async getUserCompany(): Promise<CompanyDto> {
+    return new Promise<CompanyDto>((resolve, reject) => {
+      this.connection.get(sessionStorage.getItem('username') + "/get").then(
+        r => r.subscribe(
+          (comp) => {
+            resolve(comp);
+          },
+          (error) => {
+            reject(error);
+          }
+        )
+      );
+    });
+  }
+
   submit() {
     let company: CompanyDto = this.createCompanyDto();
     let username: String = sessionStorage.getItem('username')!;
@@ -46,6 +62,13 @@ export class InputFormComponent {
           this.message = 'Bad request. Please check your input data.';
       });
     }
+
+  async ngOnInit(): Promise<void> {
+    const company = await this.getUserCompany();
+    this.name = company.companyName;
+    this.terms = company.companyTerms;
+    this.sectorId = company.companySectorId;
+  }
 
 
 
