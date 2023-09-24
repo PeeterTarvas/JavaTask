@@ -11,6 +11,9 @@ import org.springframework.security.core.userdetails.User;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * This object is for sending the users account details between the front-end and back-end.
+ */
 @Setter
 @Getter
 public class UserDto extends User {

@@ -4,6 +4,9 @@ package com.test.helmes.dbos;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * This class represents the users account in the database.
+ */
 @Builder
 @Setter
 @Getter

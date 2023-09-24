@@ -1,12 +1,14 @@
 package com.test.helmes.dtos;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+
+/**
+ * This object is for sending details of the company between the front-end and back-end.
+ */
 @Builder
 @Setter
 @Getter

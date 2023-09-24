@@ -4,6 +4,9 @@ package com.test.helmes.dbos;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * This class is the reference object that ties the user and their company.
+ */
 @Builder
 @Setter
 @Getter

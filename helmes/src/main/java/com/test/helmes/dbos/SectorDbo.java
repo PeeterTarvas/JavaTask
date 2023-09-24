@@ -6,6 +6,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
 
+/**
+ * This class represents the sector in the database.
+ */
 @Builder
 @Setter
 @Getter

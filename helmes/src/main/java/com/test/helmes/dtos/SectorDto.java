@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * This object is for sending the sectors details between the front-end and back-end.
+ */
 @Builder
 @Setter
 @Getter

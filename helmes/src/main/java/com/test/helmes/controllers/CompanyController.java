@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Api end point for all the methods that are related to the company objects logic.
+ * This is the endpoint controller for all the methods that are related to the company objects logic.
  */
 @RestController
 @RequestMapping("/company")
@@ -27,7 +27,9 @@ public class CompanyController {
     }
 
     /**
-     * Saves the company, if company doesn't have valid attributes or already exists then throws an exception.
+     * Saves the company, if company doesn't have valid attributes or already exists then updates the company of the player.
+     * @param companyDto is the company object that the user wants to save or update.
+     * @param username of the player that requests the update to be made.
      */
     @PostMapping("/{username}/save")
     public ResponseEntity<?> saveCompany(@RequestBody CompanyDto companyDto, @PathVariable String username) {
@@ -46,6 +48,11 @@ public class CompanyController {
         }
     }
 
+    /**
+     * This method returns the users company when the user logs-in.
+     * @param username of the user who has logged-in.
+     * @return the users company if it exists.
+     */
     @GetMapping("/{username}/get")
     public ResponseEntity<?> getUsersCompany(@PathVariable String username) {
         Optional<CompanyDto> companyDto = companyService.getUsersCompany(username);

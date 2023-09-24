@@ -6,6 +6,9 @@ import lombok.*;
 
 import java.math.BigInteger;
 
+/**
+ * This class represents a company in the database.
+ */
 @Builder
 @Setter
 @Getter
