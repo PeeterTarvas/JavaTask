@@ -34,9 +34,11 @@ public class CompanyController {
         try {
             boolean companyUpdated = companyService.saveCompany(username, companyDto);
             if (companyUpdated) {
-                return ResponseEntity.status(HttpStatus.OK).body("{\"message\": \"Updated company: " + companyDto.getCompanyName() + "\"}");
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body("{\"message\": \"Updated company: " + companyDto.getCompanyName() + "\"}");
             } else {
-                return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\": \"Created company: " + companyDto.getCompanyName() + "\"}");
+                return ResponseEntity.status(HttpStatus.CREATED)
+                        .body("{\"message\": \"Created company: " + companyDto.getCompanyName() + "\"}");
             }
         } catch (InvalidDataException e) {
             ErrorResponse errorResponse = new ErrorResponse("Invalid data", e.getMessage());

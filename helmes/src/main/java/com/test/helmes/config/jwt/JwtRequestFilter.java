@@ -21,8 +21,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     public static final String AUTHORIZATION = "Authorization";
     public static final String BEARER_ = "Bearer ";
-    private JwtTokenProvider jwtTokenProvider;
-    private UserDetailsService userDetails;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final UserDetailsService userDetails;
 
     @Lazy
     @Autowired
@@ -56,7 +56,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response, jakarta.servlet.FilterChain filterChain) throws jakarta.servlet.ServletException, IOException {
+    protected void doFilterInternal(jakarta.servlet.http.HttpServletRequest request,
+                                    jakarta.servlet.http.HttpServletResponse response,
+                                    jakarta.servlet.FilterChain filterChain)
+            throws jakarta.servlet.ServletException, IOException {
         // Get token form request
         Optional<String> token = getToken(request);
         System.out.println(token);

@@ -42,9 +42,7 @@ public class UserService {
     public void register(UserDto userDto) throws InvalidDataException {
         if (isValidUser(userDto)) {
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-            UserDbo userDbo = new UserDbo();
-            userDbo.setUsername(userDto.getUsername());
-            userDbo.setPassword(userDto.getPassword());
+            UserDbo userDbo = converterService.convertToUserDbo(userDto);
             try {
                 userRepository.saveAndFlush(userDbo);
             } catch (DataAccessException ex) {

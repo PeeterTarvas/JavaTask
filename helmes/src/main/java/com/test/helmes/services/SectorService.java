@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 public class SectorService {
 
 
-    private SectorRepository sectorRepository;
+    private final SectorRepository sectorRepository;
 
-    private ConverterService converterService;
+    private final ConverterService converterService;
 
     @Autowired
     public SectorService(SectorRepository sectorRepository, ConverterService converterService) {
@@ -31,7 +31,7 @@ public class SectorService {
     public List<SectorDto> getSectorDtos() {
         return sectorRepository.findAll()
                 .stream()
-                .map(x -> converterService.convertToSectorDto(x))
+                .map(converterService::convertToSectorDto)
                 .collect(Collectors.toList());
     }
 
