@@ -89,7 +89,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails =  this.userDetails.loadUserByUsername(username);
             if (jwtTokenProvider.isValid(token.get(), userDetails.getUsername())) {
-                // If token is valid, tell security that everything is ok
                 UsernamePasswordAuthenticationToken authenticationToken = buildAuthToken(userDetails, request);
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }

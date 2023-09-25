@@ -52,9 +52,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/company/**").permitAll()
+                        .requestMatchers("/company/**").authenticated()
                         .requestMatchers("/user/**").permitAll()
                         .requestMatchers("/sector/**").permitAll()
                         .anyRequest().authenticated()
@@ -84,8 +85,7 @@ public class SecurityConfig {
      * Creates a authentication manager getter that can be accessed as a bean in other objects.
      */
     @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration authConfig) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {ConnectionService} from "./connection.service";
 import {Observable} from "rxjs";
 import {UserDto} from "../dtos/user-dto";
@@ -16,12 +16,26 @@ export class CompanyWebRequestServiceService extends ConnectionService {
     this.apiEndPoint = this.apiEndPoint + "company/"
   }
 
+  getHeaders(): {headers: HttpHeaders} {
+    const token = sessionStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': "GET, POST"
 
-  override async get(api_path: string, body?: any): Promise<Observable<CompanyDto>> {
-    return await super.get(api_path, body);
+    });
+    return  { headers: headers };
   }
 
-  override post(api_path: string, dto: any): Promise<any> {
-    return super.post(api_path, dto);
+
+  override async get(api_path: string, body?: any): Promise<Observable<CompanyDto>> {
+    const options: {headers: HttpHeaders} = this.getHeaders();
+    return await super.get(api_path, options);
+  }
+
+  override async post(api_path: string, dto: any): Promise<any> {
+    const options: {headers: HttpHeaders} = this.getHeaders();
+    return super.post(api_path, dto, options);
   }
 }
