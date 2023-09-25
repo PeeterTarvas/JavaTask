@@ -16,6 +16,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for all user related activities - login and register.
+ */
 @Service
 public class UserService {
 
@@ -39,6 +42,14 @@ public class UserService {
         this.converterService = converterService;
     }
 
+    /**
+     * This method registers the users account by:
+     *  - checking if the users details are valid
+     *  - encoding their password
+     *  - save the account
+     * @param userDto with the details of the account.
+     * @throws InvalidDataException if user already exists(username already exists) or their data is invalid.
+     */
     public void register(UserDto userDto) throws InvalidDataException {
         if (isValidUser(userDto)) {
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
@@ -53,6 +64,17 @@ public class UserService {
         }
     }
 
+    /**
+     * This method is for users to login to their account.
+     * Steps are:
+     * - it validates login details with isValidUser method.
+     * - if it is valid then authenticate the user by their password, with authentication manager
+     * - get the users details object by with the principal - user details - object returned by the authentication
+     * - Generate the token with the users token
+     * @param userDto with the account details of the user.
+     * @return a data transfer object that contains the accounts username and jwt.
+     * @throws InvalidDataException if password or username is incorrect or when their data isn't valid.
+     */
     public LoginResponseDto login(UserDto userDto) throws InvalidDataException {
         if (isValidUser(userDto)) {
             Authentication authentication;
@@ -71,6 +93,12 @@ public class UserService {
         }
     }
 
+    /**
+     * Initial validation of the users details.
+     * Checks if the username or password of the sent UserDto object isn't empty.
+     * @param userDto with the accounts details.
+     * @return true if the details aren't empty.
+     */
     private boolean isValidUser(UserDto userDto) {
         return (!userDto.getUsername().isBlank() && !userDto.getPassword().isBlank());
     }
