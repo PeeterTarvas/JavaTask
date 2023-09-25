@@ -12,12 +12,14 @@ import com.test.helmes.repositories.UserCompanyReferenceRepository;
 import com.test.helmes.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service for handling all company related logic.
+ */
 @Service
 public class CompanyService {
 
@@ -37,14 +39,8 @@ public class CompanyService {
         this.userRepository = userRepository;
         this.userCompanyReferenceRepository = userCompanyReferenceRepository;
     }
-    /**
-     * saveCompany method is a service method that saves the company, if valid, with the help of repository.
-     * If companyDto's attributes are all valid then it will be saved through the companyRepository method.
-     * If the company already exists then it will throw an error and will not save the company
-     *  -- future should be altering the company, not sure if user validation should be here as well
-     * @param companyDto of the company that is being saved
-     * @throws InvalidDataException if data is invalid or already exists
-     */
+
+
     @Transactional(rollbackOn = InvalidDataException.class)
     public boolean saveCompany(String username, CompanyDto companyDto) throws InvalidDataException {
         Optional<UserDbo> userDbo = userRepository.getUserDboByUsername(username);
@@ -66,6 +62,10 @@ public class CompanyService {
         }
     }
 
+    /**
+     * Method for updating company in the database. This is called in saveCompany method
+     * if the user already has a company in the database. Then that company is updated with the new details.
+     */
     private void updateCompanyDetails(CompanyDto companyDto, UserCompanyReferenceDbo userCompanyReferenceDbo) {
         CompanyDbo company = userCompanyReferenceDbo.getCompanyReference();
         company.setCompanyName(companyDto.getCompanyName());
@@ -74,21 +74,43 @@ public class CompanyService {
         companyRepository.save(company);
     }
 
+    /**
+     * Checks if the user has a company already accosted with his account.
+     * If the user has a company then its reference object is wrapped in an optional and returned.
+     * @param userDbo that holds the details of the user whos company we are searching for.
+     * @return an Optional of the user and company reference object.
+     */
     private Optional<UserCompanyReferenceDbo> userHasCompany(UserDbo userDbo) {
         return userCompanyReferenceRepository.getUserCompanyReferenceDboByUserReference(userDbo);
     }
 
+    /**
+     * Saves a new company to the company database and also saves a reference
+     * referring to the user and company.
+     * @param userDbo that holds the user database object.
+     * @param companyDto that holds the company database object.
+     */
     private void saveNewCompany(UserDbo userDbo, CompanyDto companyDto) {
         companyRepository.saveCompany(converterService.convertToCompanyDbo(companyDto));
         Optional<CompanyDbo> company = companyRepository.getCompanyDboByCompanyName(companyDto.getCompanyName());
         userCompanyReferenceRepository.save(converterService.createUserCompanyReferenceDbo(userDbo, company.get()));
     }
 
+    /**
+     * This method is for getting the company of a user by only providing a username of the user.
+     * This is mainly used when user logs-in and ngInit requests the users company to display already
+     * made company's info.
+     * First check if the user exists by getting the users database object by his name.
+     *  - if the user exists then check for a user-company reference object in the database
+     *   - if the reference exists then get the references company object and return it as an optional
+     *  else return an empty optional.
+     * @param username of the account who requests his company.
+     * @return an optional of the company data transfer object(CompanyDto).
+     */
     public Optional<CompanyDto> getUsersCompany(String username) {
         Optional<UserDbo> userDbo = userRepository.getUserDboByUsername(username);
         if (userDbo.isPresent()) {
-            Optional<UserCompanyReferenceDbo> userCompanyReferenceDbo = userCompanyReferenceRepository
-                    .getUserCompanyReferenceDboByUserReference(userDbo.get());
+            Optional<UserCompanyReferenceDbo> userCompanyReferenceDbo = userHasCompany(userDbo.get());
             if (userCompanyReferenceDbo.isPresent()) {
                 return Optional.of(
                         converterService.convertToCompanyDto(userCompanyReferenceDbo.get().getCompanyReference()));
@@ -106,7 +128,7 @@ public class CompanyService {
 
     /**
      * Controls if company has accepted terms, has a valid name and that the sectorId isn't null, i.e. exists
-     * @return a boolean if companyDtos attributes are valid or not
+     * @return a boolean if companyDto attributes are valid or not
      */
     private boolean isValid(CompanyDto companyDto) {
         return companyDto.getCompanyTerms()
@@ -115,7 +137,7 @@ public class CompanyService {
     }
 
     /**
-     * @return if the name isn't an empty string, mby should add UTF-8 check here as well?
+     * @return if the name isn't an empty string.
      */
     private boolean isValidName(String name) {
         return !name.trim().isEmpty();

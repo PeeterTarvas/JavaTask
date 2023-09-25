@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class ConverterService {
 
+    /**
+     * Convert from CompanyDto to CompanyDbo.
+     */
     public CompanyDbo convertToCompanyDbo(CompanyDto companyDto) {
         return CompanyDbo.builder()
                 .companyName(companyDto.getCompanyName())
@@ -24,6 +27,9 @@ public class ConverterService {
                 .build();
     }
 
+    /**
+     * Convert from CompanyDbo to CompanyDto.
+     */
     public CompanyDto convertToCompanyDto(CompanyDbo companyDbo) {
         return CompanyDto.builder()
                 .companyName(companyDbo.getCompanyName())
@@ -32,6 +38,9 @@ public class ConverterService {
                 .build();
     }
 
+    /**
+     * Convert SectorDbo to SectorDto.
+     */
     public SectorDto convertToSectorDto(SectorDbo sectorDbo) {
         return SectorDto.builder()
                 .sectorName(sectorDbo.getSectorName())
@@ -41,6 +50,9 @@ public class ConverterService {
     }
 
 
+    /**
+     * Convert from UserDto to UserDbo.
+     */
     public UserDbo convertToUserDbo(UserDto userDto) {
         return UserDbo.builder()
                 .username(userDto.getUsername())
@@ -48,10 +60,16 @@ public class ConverterService {
                 .build();
     }
 
+    /**
+     * Convert from UserDbo to UserDto.
+     */
     public UserDto convertToUserDto(UserDbo userDbo) {
         return new UserDto(userDbo.getUsername(), userDbo.getPassword(), null);
     }
 
+    /**
+     * Build UserCompanyReferenceDbo from UserDbo and CompanyDbo.
+     */
     public UserCompanyReferenceDbo createUserCompanyReferenceDbo(UserDbo user, CompanyDbo company) {
         return UserCompanyReferenceDbo.builder()
                 .userReference(user)
