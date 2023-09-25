@@ -7,7 +7,7 @@ services:
       - 'POSTGRES_PASSWORD=secret'
       - 'POSTGRES_USER=myuser'
     ports:
-      - '5432'
+      - '5432:5432'
     volumes:
-      - .\src\main\resources\database.sql:/docker-entrypoint-initdb.d/database.sql
-      - .\src\main\resources\data.sql:/docker-entrypoint-initdb.d/data.sql
+      - ./src/main/resources/database.sql:/docker-entrypoint-initdb.d/database.sql
+      - ./src/main/resources/data.sql:/docker-entrypoint-initdb.d/data.sql

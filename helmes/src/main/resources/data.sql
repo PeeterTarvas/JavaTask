@@ -2,6 +2,8 @@
 
 -- helped to generate: https://aihelperbot.com/app
 
+DELETE FROM helmes.sector;
+
 INSERT INTO helmes.sector (sector_id, sector_name, sector_parent_id) VALUES
     (1, 'Manufacturing', NULL),
     (2, 'Construction materials', 1),
