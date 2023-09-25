@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.HashMap;
 
-
+/**
+ * Jwt token provider is the main class responsible for providing a jwt token.
+ */
 @Getter
 @Service
 public class JwtTokenProvider {
