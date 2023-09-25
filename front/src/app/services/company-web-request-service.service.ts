@@ -21,9 +21,6 @@ export class CompanyWebRequestServiceService extends ConnectionService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': "GET, POST"
-
     });
     return  { headers: headers };
   }
@@ -31,7 +28,7 @@ export class CompanyWebRequestServiceService extends ConnectionService {
 
   override async get(api_path: string, body?: any): Promise<Observable<CompanyDto>> {
     const options: {headers: HttpHeaders} = this.getHeaders();
-    return await super.get(api_path, options);
+    return super.get(api_path, options);
   }
 
   override async post(api_path: string, dto: any): Promise<any> {
