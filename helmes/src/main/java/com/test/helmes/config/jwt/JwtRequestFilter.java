@@ -31,6 +31,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         this.userDetails = userDetails;
     }
 
+    /**
+     * Provides the authentication token that tje user os authenticated with.
+     * Creates a new token, adds the http request to it and then returns the newly generated token.
+     */
     private UsernamePasswordAuthenticationToken buildAuthToken(UserDetails userDetails, HttpServletRequest request) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -38,6 +42,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         return authenticationToken;
     }
 
+    /**
+     * return the username inside a jwt.
+     */
     private String getUsername(Optional<String> token) {
         try {
             return jwtTokenProvider.getUsernameFormToken(token.get());
@@ -47,6 +54,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
     }
 
+    /**
+     * Return a token inside the http request.
+     */
     public Optional<String> getToken(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);
         if (header == null || !header.startsWith(BEARER_)) {
@@ -55,27 +65,28 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         return Optional.of(header.substring(BEARER_.length()));
     }
 
+    /**
+     * Main filtering method that is responsible for validating a request.
+     * It checks it there is a username and if there is a token.
+     *  - then gets the user and his token -> checks if the token is valid
+     *      if yes then builds an authentication token and sets the
+     */
     @Override
     protected void doFilterInternal(jakarta.servlet.http.HttpServletRequest request,
                                     jakarta.servlet.http.HttpServletResponse response,
                                     jakarta.servlet.FilterChain filterChain)
             throws jakarta.servlet.ServletException, IOException {
-        // Get token form request
         Optional<String> token = getToken(request);
-        System.out.println(token);
         if (token.isEmpty()) {
             filterChain.doFilter(request, response);
             return;
         }
-        // Get username out of token
         String username = getUsername(token);
         if (username == null) {
             filterChain.doFilter(request, response);
             return;
         }
-        //Is token valid??
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
-            // get spring context by spring user
             UserDetails userDetails =  this.userDetails.loadUserByUsername(username);
             if (jwtTokenProvider.isValid(token.get(), userDetails.getUsername())) {
                 // If token is valid, tell security that everything is ok

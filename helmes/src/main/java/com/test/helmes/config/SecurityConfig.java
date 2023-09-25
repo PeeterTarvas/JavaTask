@@ -42,7 +42,8 @@ public class SecurityConfig {
 
     /**
      * This method configures the security filter chain for your Spring Security configuration.
-     * It defines how incoming HTTP requests should be handled in terms of authentication and authorization.
+     * It defines how incoming HTTP requests should be handled in terms of authentication and authorization
+     * with the jwtRequestFilter.
      * @param http The HttpSecurity object used to configure security filters.
      * @return A SecurityFilterChain that specifies the security rules for various endpoints.
      * @throws Exception If there is an error while configuring security.
