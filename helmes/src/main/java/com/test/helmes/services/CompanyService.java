@@ -23,10 +23,10 @@ import java.util.Optional;
 @Service
 public class CompanyService {
 
-    private CompanyRepository companyRepository;
-    private ConverterService converterService;
-    private UserRepository userRepository;
-    private UserCompanyReferenceRepository userCompanyReferenceRepository;
+    private final CompanyRepository companyRepository;
+    private final ConverterService converterService;
+    private final UserRepository userRepository;
+    private final UserCompanyReferenceRepository userCompanyReferenceRepository;
 
     @Autowired
     public CompanyService(CompanyRepository companyRepository,
@@ -41,8 +41,19 @@ public class CompanyService {
     }
 
 
+    /**
+     * This method is for updating or saving the users company.
+     * First it checks if the user is a valid user(exists) and then if the company details are correct.
+     *  - if true then find if the user already has a company,
+     *      - if yes then update that company with updateCompanyDetails and return true.
+     *      - else create a new company for the user with saveNewCompany and return false
+     * @param username of the user who wants to save the company.
+     * @param companyDto that holds the company details.
+     * @return true if the company has been updated and false if it is saved the first time.
+     * @throws InvalidDataException if user has invalid details about company or somehow doesn't have a account.
+     */
     @Transactional(rollbackOn = InvalidDataException.class)
-    public boolean saveCompany(String username, CompanyDto companyDto) throws InvalidDataException {
+    public boolean updateOrSaveCompany(String username, CompanyDto companyDto) throws InvalidDataException {
         Optional<UserDbo> userDbo = userRepository.getUserDboByUsername(username);
         if (isValid(companyDto) && userDbo.isPresent()) {
             try {
@@ -123,7 +134,7 @@ public class CompanyService {
      * @return all the companies, this is for checking the database from back-end
      */
     public List<CompanyDto> getAll() {
-        return companyRepository.findAll().stream().map(x -> converterService.convertToCompanyDto(x)).toList();
+        return companyRepository.findAll().stream().map(converterService::convertToCompanyDto).toList();
     }
 
     /**

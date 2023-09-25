@@ -34,7 +34,7 @@ public class CompanyController {
     @PostMapping("/{username}/save")
     public ResponseEntity<?> saveCompany(@RequestBody CompanyDto companyDto, @PathVariable String username) {
         try {
-            boolean companyUpdated = companyService.saveCompany(username, companyDto);
+            boolean companyUpdated = companyService.updateOrSaveCompany(username, companyDto);
             if (companyUpdated) {
                 return ResponseEntity.status(HttpStatus.OK)
                         .body("{\"message\": \"Updated company: " + companyDto.getCompanyName() + "\"}");
