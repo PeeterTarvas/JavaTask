@@ -1,5 +1,3 @@
-\c dwh;
-
 CREATE SCHEMA IF NOT EXISTS helmes;
 
 CREATE TABLE helmes.sector (

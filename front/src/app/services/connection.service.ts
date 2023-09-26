@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {UserDto} from "../dtos/user-dto";
 
@@ -22,10 +22,10 @@ export class ConnectionService {
 
   }
 
-  async post(api_path: string, dto: any): Promise<any> {
+  async post(api_path: string, dto: any, options?: {headers: HttpHeaders}): Promise<any> {
     const post = this.apiEndPoint + api_path;
     return new Promise<any>((resolve, reject) => {
-      this.httpClient.post(post, dto).subscribe(
+      this.httpClient.post(post, dto, options).subscribe(
         (response) => {
           resolve(response);
         },
