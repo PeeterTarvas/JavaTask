@@ -25,14 +25,18 @@ export class CompanyWebRequestServiceService extends ConnectionService {
     return  { headers: headers };
   }
 
+  override async put(api_path: string, body: any): Promise<Observable<CompanyDto>> {
+    const options: {headers: HttpHeaders} = this.getHeaders();
+    return super.put(api_path, body, options);
+  }
 
   override async get(api_path: string, body?: any): Promise<Observable<CompanyDto>> {
     const options: {headers: HttpHeaders} = this.getHeaders();
     return super.get(api_path, options);
   }
 
-  override async post(api_path: string, dto: any): Promise<any> {
+  override async post(api_path: string, body: any): Promise<any> {
     const options: {headers: HttpHeaders} = this.getHeaders();
-    return super.post(api_path, dto, options);
+    return super.post(api_path, body, options);
   }
 }

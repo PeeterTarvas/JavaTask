@@ -34,14 +34,21 @@ public class CompanyController {
     @PostMapping("/{username}/save")
     public ResponseEntity<?> saveCompany(@RequestBody CompanyDto companyDto, @PathVariable String username) {
         try {
-            boolean companyUpdated = companyService.updateOrSaveCompany(username, companyDto);
-            if (companyUpdated) {
-                return ResponseEntity.status(HttpStatus.OK)
-                        .body("{\"message\": \"Updated company: " + companyDto.getCompanyName() + "\"}");
-            } else {
-                return ResponseEntity.status(HttpStatus.CREATED)
-                        .body("{\"message\": \"Created company: " + companyDto.getCompanyName() + "\"}");
-            }
+            companyService.saveCompany(username, companyDto);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body("{\"message\": \"Created company: " + companyDto.getCompanyName() + "\"}");
+        } catch (InvalidDataException e) {
+            ErrorResponse errorResponse = new ErrorResponse("Invalid data", e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(errorResponse);
+        }
+    }
+
+    @PutMapping("/{username}/update")
+    public ResponseEntity<?> updateCompany(@RequestBody CompanyDto companyDto, @PathVariable String username) {
+        try {
+            companyService.updateCompany(username, companyDto);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("{\"message\": \"Updated company: " + companyDto.getCompanyName() + "\"}");
         } catch (InvalidDataException e) {
             ErrorResponse errorResponse = new ErrorResponse("Invalid data", e.getMessage());
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(errorResponse);

@@ -53,18 +53,11 @@ public class CompanyService {
      * @throws InvalidDataException if user has invalid details about company or somehow doesn't have a account.
      */
     @Transactional(rollbackOn = InvalidDataException.class)
-    public boolean updateOrSaveCompany(String username, CompanyDto companyDto) throws InvalidDataException {
+    public void saveCompany(String username, CompanyDto companyDto) throws InvalidDataException {
         Optional<UserDbo> userDbo = userRepository.getUserDboByUsername(username);
         if (isValid(companyDto) && userDbo.isPresent()) {
             try {
-                Optional<UserCompanyReferenceDbo> userCompanyReference = userHasCompany(userDbo.get());
-                if (userCompanyReference.isPresent()) {
-                    updateCompanyDetails(companyDto, userCompanyReference.get());
-                    return true;
-                } else {
-                    saveNewCompany(userDbo.get(), companyDto);
-                    return false;
-                }
+                saveNewCompany(userDbo.get(), companyDto);
             } catch (NoDataExistsException e) {
                 throw new InvalidDataException("Bad input!");
             }
@@ -73,6 +66,22 @@ public class CompanyService {
         }
     }
 
+    @Transactional(rollbackOn = InvalidDataException.class)
+    public void updateCompany(String username, CompanyDto companyDto) throws InvalidDataException {
+        Optional<UserDbo> userDbo = userRepository.getUserDboByUsername(username);
+        if (isValid(companyDto) && userDbo.isPresent()) {
+            try {
+                Optional<UserCompanyReferenceDbo> userCompanyReference = userHasCompany(userDbo.get());
+                if (userCompanyReference.isPresent()) {
+                    updateCompanyDetails(companyDto, userCompanyReference.get());
+                }
+            } catch (NoDataExistsException e) {
+                throw new InvalidDataException("Bad input!");
+            }
+        } else {
+            throw new InvalidDataException("Missing input!");
+        }
+    }
     /**
      * Method for updating company in the database. This is called in saveCompany method
      * if the user already has a company in the database. Then that company is updated with the new details.

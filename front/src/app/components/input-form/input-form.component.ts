@@ -56,6 +56,14 @@ export class InputFormComponent implements OnInit {
     });
   }
 
+  createNewCompany(username: string, company: CompanyDto) {
+    return this.connection.post(username +'/save', company)
+  }
+
+  updateCompany(username: string, company: CompanyDto) {
+    return this.connection.put(username +'/update', company)
+  }
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
@@ -63,8 +71,14 @@ export class InputFormComponent implements OnInit {
 
   submit() {
     let company: CompanyDto = this.createCompanyDto();
-    let username: String = sessionStorage.getItem('username')!;
-    this.connection.post(username +'/save', company).then( (response) =>
+    let username: string = sessionStorage.getItem('username')!;
+    let resp;
+    if (this.sectorId !== undefined) {
+      resp = this.updateCompany(username, company);
+    } else {
+      resp = this.createNewCompany(username, company);
+    }
+    resp.then( (response) =>
       {
         if (response && response.message) {
           this.message = response.message;
