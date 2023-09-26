@@ -42,15 +42,12 @@ public class CompanyService {
 
 
     /**
-     * This method is for updating or saving the users company.
+     * This method is for saving the users company.
      * First it checks if the user is a valid user(exists) and then if the company details are correct.
-     *  - if true then find if the user already has a company,
-     *      - if yes then update that company with updateCompanyDetails and return true.
-     *      - else create a new company for the user with saveNewCompany and return false
+     *  - if true then create a new company for the user with saveNewCompany and return false
      * @param username of the user who wants to save the company.
      * @param companyDto that holds the company details.
-     * @return true if the company has been updated and false if it is saved the first time.
-     * @throws InvalidDataException if user has invalid details about company or somehow doesn't have a account.
+     * @throws InvalidDataException if user has invalid details about company or user is not present.
      */
     @Transactional(rollbackOn = InvalidDataException.class)
     public void saveCompany(String username, CompanyDto companyDto) throws InvalidDataException {
@@ -66,6 +63,14 @@ public class CompanyService {
         }
     }
 
+    /**
+     * This method is for updating the users company.
+     * Firstly it checks if the user exists
+     *  - if true then calls updateCompanyDetails for updating the company.
+     * @param username of the user.
+     * @param companyDto that holds the updated details.
+     * @throws InvalidDataException if the details of the company are wrong or user is not present.
+     */
     @Transactional(rollbackOn = InvalidDataException.class)
     public void updateCompany(String username, CompanyDto companyDto) throws InvalidDataException {
         Optional<UserDbo> userDbo = userRepository.getUserDboByUsername(username);
@@ -83,7 +88,7 @@ public class CompanyService {
         }
     }
     /**
-     * Method for updating company in the database. This is called in saveCompany method
+     * Method for updating company in the database. This is called in updateCompany method.
      * if the user already has a company in the database. Then that company is updated with the new details.
      */
     private void updateCompanyDetails(CompanyDto companyDto, UserCompanyReferenceDbo userCompanyReferenceDbo) {

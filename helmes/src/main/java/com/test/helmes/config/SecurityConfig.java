@@ -88,7 +88,7 @@ public class SecurityConfig {
     }
 
     /**
-     * Creates a authentication manager getter that can be accessed as a bean in other objects.
+     * Creates an authentication manager getter that can be accessed as a bean in other objects.
      */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {

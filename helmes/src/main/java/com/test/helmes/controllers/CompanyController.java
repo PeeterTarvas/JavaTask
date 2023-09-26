@@ -27,7 +27,7 @@ public class CompanyController {
     }
 
     /**
-     * Saves the company, if company doesn't have valid attributes or already exists then updates the company of the player.
+     * Saves the company, if company doesn't have valid attributes it throws an error.
      * @param companyDto is the company object that the user wants to save or update.
      * @param username of the player that requests the update to be made.
      */
@@ -43,6 +43,12 @@ public class CompanyController {
         }
     }
 
+    /**
+     * Endpoint that enables the user to update their company by calling a service that handles the updating.
+     * @param companyDto that holds the updated details of the company.
+     * @param username of the user that wants to update their company.
+     * @return a response entity containing either an OK response or an error.
+     */
     @PutMapping("/{username}/update")
     public ResponseEntity<?> updateCompany(@RequestBody CompanyDto companyDto, @PathVariable String username) {
         try {

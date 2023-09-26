@@ -4,6 +4,9 @@ import {LoginResponse} from "../dtos/login-response";
 import {UserDto} from "../dtos/user-dto";
 import {UserWebRequestServiceService} from "./user-web-request-service.service";
 
+/**
+ * This class is for handling user authentication.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -25,26 +28,35 @@ export class AuthenticationService {
     return this.currentUserSubject ? this.currentUserSubject.value : undefined
   }
 
+  /**
+   * Method for user logging-in.
+   * First it sends a login request to the back end, the method is post because
+   * it's easier to send the user details as a body I know it should be get. User details are sent with the UserDto.
+   * If the user exists then it is returned by the back-end as a LoginResponse.
+   * The LoginResponse contains the users username and token, which are used for authenticating requests.
+   * These attributes are saved to the sessionStorage to be easily used later.
+   * It returns the response indicating that the login has been successful.
+   * It is not successful then it returns an error.
+   * @param loginRequest
+   */
   async login(loginRequest: UserDto): Promise<LoginResponse | Error> {
-    try {
       const loginResponse: LoginResponse = await this.userService.post("login", loginRequest);
       if (loginResponse && loginResponse.token) {
         sessionStorage.setItem('username', loginResponse.username);
         sessionStorage.setItem('token', loginResponse.token);
         this.currentUserSubject.next(loginResponse);
         return loginResponse;
-      } else {
-        throw new Error("Bad details");
       }
-    } catch (error) {
       return new Error("Login failed");
-    }
+
   }
 
-
+  /**
+   * This is for enabling logout, basically removes username and storage from storage.
+   */
   logout() {
-    localStorage.removeItem('username');
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('username');
+    sessionStorage.removeItem('token');
     this.currentUserSubject.next(undefined);
   }
 

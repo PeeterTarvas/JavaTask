@@ -6,6 +6,10 @@ import {LoginResponse} from "../dtos/login-response";
 import {ConnectionService} from "./connection.service";
 import {SectorDto} from "../dtos/sector-dto";
 
+/**
+ *  Connection service for handling sector related request making
+ *  it extends ConnectionService which has all the needed methods for sending requests.
+ */
 @Injectable({
   providedIn: 'root'
 })
