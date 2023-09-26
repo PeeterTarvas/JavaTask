@@ -66,10 +66,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     }
 
     /**
-     * Main filtering method that is responsible for validating a request.
-     * It checks it there is a username and if there is a token.
-     *  - then gets the user and his token -> checks if the token is valid
-     *      if yes then builds an authentication token and sets the
+     * Main filtering method that is responsible for authenticating a request.
+     * It firstly gets the token and if it exists then gets the user of that token.
+     * After getting that it checks if the user exists then validates the user by:
+     *  - checking if the tokens user and the user match,
+     *   - if everything is valid then it builds an authentication token and sets the authentication context as the token
+     *   so that the user has been authenticated.
      */
     @Override
     protected void doFilterInternal(jakarta.servlet.http.HttpServletRequest request,

@@ -19,6 +19,9 @@ import java.util.Collections;
 public class CorsConfig  {
 
     /**
+     * CORS must be processed before Spring Security, because the pre-flight request does not contain any cookies (that is, the JSESSIONID).
+     * If the request does not contain any cookies and Spring Security is first,
+     * the request determines that the user is not authenticated (since there are no cookies in the request) and rejects it.
      * @return a cors mapping to the front-end side for 4 main http methods.
      */
     @Bean
