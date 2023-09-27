@@ -3,10 +3,11 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AuthenticationService} from "../../services/authentication.service";
 import {Router} from "@angular/router";
 import {UserDto} from "../../dtos/user-dto";
-import {first} from "rxjs";
-import {LoginResponse} from "../../dtos/login-response";
 import {UserWebRequestServiceService} from "../../services/user-web-request-service.service";
 
+/**
+ * This component meant for the user to register their account.
+ */
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -30,13 +31,18 @@ export class RegisterComponent implements OnInit {
     }
   }
 
+  /**
+   * This method is for submitting a new account with the username and password that the user has provided.
+   * If the user with that username already exists or no details were provided then the registering fails.
+   * Else the user is prompted to the login page where they can login to their account.
+   *
+   */
   onSubmit() {
     if (this.registerForm.invalid) {
       return;
     }
     const {username, password} = this.registerForm.value
     const registerRequest: UserDto = {username: username, password: password};
-    console.log(registerRequest)
     this.userService.post("register",registerRequest).then(
       (response) => {
         this.router.navigate(['/login'])

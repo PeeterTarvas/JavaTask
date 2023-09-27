@@ -5,7 +5,7 @@ import {UserDto} from "../dtos/user-dto";
 import {UserWebRequestServiceService} from "./user-web-request-service.service";
 
 /**
- * This class is for handling user authentication.
+ * This class is for handling user authentication and logging in.
  */
 @Injectable({
   providedIn: 'root'

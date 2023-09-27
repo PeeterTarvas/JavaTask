@@ -21,6 +21,11 @@ export class SectorWebRequestServiceService extends ConnectionService {
   }
 
 
+  /**
+   * This method overrides the default get method from the parent class.
+   * It's main function is to get all the sectors form the back-end so that they could be shown to the user.
+   * @param api_path
+   */
   override async get(api_path: string): Promise<SectorDto[]> {
     let get = this.apiEndPoint + api_path;
     return new Promise<SectorDto[]>((resolve) => {

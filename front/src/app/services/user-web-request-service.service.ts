@@ -2,9 +2,12 @@ import { Injectable } from '@angular/core';
 import {ConnectionService} from "./connection.service";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {UserDto} from "../dtos/user-dto";
 import {LoginResponse} from "../dtos/login-response";
 
+/**
+ *  Connection service for handling user related request making used in Authentication service
+ *  it extends ConnectionService which has all the needed methods for sending requests.
+ */
 @Injectable({
   providedIn: 'root'
 })
