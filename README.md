@@ -4,12 +4,14 @@
     - helmes is the back-end made with Spring Boot that runs on port 8080
     - front is the front-end made with Angular that runs on port 4200
     - the helmes project folder also contains PostgreSQL files and compose.yaml
-      with which you can run the database easily on Docker, database runs on port 5432
+      with which you can run the database easily on Docker, database runs on port 5432. The database files are in:
+      helmes/src/main/resources
 
 ## Running locally:
     - You need to have dependencies:
         - Java 17
         - Node 16.18.10
+        - Docker 
     - First run compose.yaml, make sure that your Docker is running, commands are:
         - `cd helmes`
         - `docker compose up`
