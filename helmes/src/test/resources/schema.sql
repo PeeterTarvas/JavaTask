@@ -29,4 +29,4 @@ CREATE TABLE helmes.user_company_reference (
     company_id BIGINT,
     FOREIGN KEY (company_id) REFERENCES helmes.sector(sector_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES helmes.user(user_id)  ON UPDATE CASCADE ON DELETE CASCADE
-)
+);
