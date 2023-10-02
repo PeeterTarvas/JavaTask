@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 /**
  * This is the endpoint controller for the sectors in the back-end.
  */
-@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 @RestController
 @RequestMapping("/sector")
 public class SectorController {

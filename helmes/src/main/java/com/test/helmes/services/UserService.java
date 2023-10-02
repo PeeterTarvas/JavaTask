@@ -99,7 +99,7 @@ public class UserService {
      * @param userDto with the accounts details.
      * @return true if the details aren't empty.
      */
-    private boolean isValidUser(UserDto userDto) {
+    public boolean isValidUser(UserDto userDto) {
         return (!userDto.getUsername().isBlank() && !userDto.getPassword().isBlank());
     }
 }

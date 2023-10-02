@@ -118,7 +118,8 @@ public class CompanyService {
     private void saveNewCompany(UserDbo userDbo, CompanyDto companyDto) {
         companyRepository.saveCompany(converterService.convertToCompanyDbo(companyDto));
         Optional<CompanyDbo> company = companyRepository.getCompanyDboByCompanyName(companyDto.getCompanyName());
-        userCompanyReferenceRepository.save(converterService.createUserCompanyReferenceDbo(userDbo, company.get()));
+        UserCompanyReferenceDbo userCompanyReferenceDbo = converterService.createUserCompanyReferenceDbo(userDbo, company.get());
+        userCompanyReferenceRepository.save(userCompanyReferenceDbo);
     }
 
     /**
@@ -145,17 +146,10 @@ public class CompanyService {
     }
 
     /**
-     * @return all the companies, this is for checking the database from back-end
-     */
-    public List<CompanyDto> getAll() {
-        return companyRepository.findAll().stream().map(converterService::convertToCompanyDto).toList();
-    }
-
-    /**
      * Controls if company has accepted terms, has a valid name and that the sectorId isn't null, i.e. exists
      * @return a boolean if companyDto attributes are valid or not
      */
-    private boolean isValid(CompanyDto companyDto) {
+    public boolean isValid(CompanyDto companyDto) {
         return companyDto.getCompanyTerms()
                 && isValidName(companyDto.getCompanyName())
                 && companyDto.getCompanySectorId() != null;
@@ -164,8 +158,11 @@ public class CompanyService {
     /**
      * @return if the name isn't an empty string.
      */
-    private boolean isValidName(String name) {
-        return !name.trim().isEmpty();
+    public boolean isValidName(String name) {
+        if (name != null) {
+            return !name.trim().isEmpty();
+        }
+        return false;
     }
 
 }

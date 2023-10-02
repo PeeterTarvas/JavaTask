@@ -75,12 +75,4 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    /**
-     * @return all the company's in the database
-     */
-    @GetMapping("/getAll")
-    public List<CompanyDto> getAll() {
-        return companyService.getAll();
-    }
-
 }

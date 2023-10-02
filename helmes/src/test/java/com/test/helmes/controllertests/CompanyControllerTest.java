@@ -44,23 +44,21 @@ public class CompanyControllerTest {
     }
 
     @Test
-    public void testSaveCompany_Success() throws InvalidDataException {
+    public void testSaveCompanySuccess() throws InvalidDataException {
         CompanyDto companyDto = new CompanyDto("test", 1, true);
         String username = "testUser";
 
-        // Mock the behavior of the service method
         doNothing().when(companyService).saveCompany(username, companyDto);
 
         ResponseEntity<?> responseEntity = companyController.saveCompany(companyDto, username);
 
-        // Verify that the service method was called with the expected arguments
         verify(companyService, times(1)).saveCompany(username, companyDto);
 
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
     }
 
     @Test
-    public void testSaveCompany_InvalidDataException() throws InvalidDataException {
+    public void testSaveCompanyInvalidDataException() throws InvalidDataException {
         CompanyDto companyDto = new CompanyDto("test", 1, true);
         String username = "testUser";
 
@@ -72,11 +70,10 @@ public class CompanyControllerTest {
     }
 
     @Test
-    public void testUpdateCompany_Success() throws InvalidDataException {
+    public void testUpdateCompanySuccess() throws InvalidDataException {
         CompanyDto companyDto = new CompanyDto("test", 1, true);
         companyDto.setCompanyName("Test Company");
         String username = "testUser";
-
 
         doNothing().when(companyService).updateCompany(username, companyDto);
 
@@ -86,13 +83,11 @@ public class CompanyControllerTest {
     }
 
     @Test
-    public void testUpdateCompany_InvalidDataException() throws InvalidDataException {
+    public void testUpdateCompanyInvalidDataException() throws InvalidDataException {
         CompanyDto companyDto = new CompanyDto("test", 1, true);
         String username = "testUser";
 
-
         doThrow(new InvalidDataException("Invalid data")).when(companyService).updateCompany(username, companyDto);
-
 
         ResponseEntity<?> responseEntity = companyController.updateCompany(companyDto, username);
 
@@ -100,19 +95,17 @@ public class CompanyControllerTest {
     }
 
     @Test
-    public void testGetUsersCompany_Exists() {
+    public void testGetUsersCompanyExists() {
         String username = "testUser";
         CompanyDto companyDto = new CompanyDto("test", 1, true);
         companyDto.setCompanyName("Test Company");
 
-        // Mock the behavior of the service method to return an Optional of CompanyDto
         when(companyService.getUsersCompany(username)).thenReturn(Optional.of(companyDto));
 
         ResponseEntity<?> responseEntity = companyController.getUsersCompany(username);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        // Verify that the response body contains the CompanyDto content (you can customize this verification)
         CompanyDto responseBody = (CompanyDto) responseEntity.getBody();
         assertNotNull(responseBody);
         assertEquals("Test Company", responseBody.getCompanyName());
@@ -121,7 +114,7 @@ public class CompanyControllerTest {
     }
 
     @Test
-    public void testGetUsersCompany_NotFound() {
+    public void testGetUsersCompanyNotFound() {
         String username = "testUser";
 
         when((companyService).getUsersCompany(username)).thenReturn(Optional.empty());
@@ -130,4 +123,6 @@ public class CompanyControllerTest {
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
+
+
 }
