@@ -9,8 +9,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.sql.Array;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Configurer class for configuring cors.
@@ -31,6 +33,8 @@ public class CorsConfig  {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:4200")
+                        .allowedOrigins("http://localhost:80")
+                        .allowedOrigins("http://localhost")
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowCredentials(true)
                         .allowedHeaders("*")
