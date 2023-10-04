@@ -12,7 +12,7 @@ CREATE TABLE helmes.company (
     company_sector_id integer NOT NULL,
     company_terms boolean NOT NULL,
     FOREIGN KEY (company_sector_id) REFERENCES helmes.sector(sector_id)  ON UPDATE CASCADE,
-    CONSTRAINT AK_company_name UNIQUE (company_name)
+    CONSTRAINT company_name_must_be_unique UNIQUE (company_name)
 
 );
 
@@ -20,7 +20,7 @@ CREATE TABLE helmes.user (
     user_id BIGSERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    CONSTRAINT AK_user_name UNIQUE (username)
+    CONSTRAINT user_name_must_be_unique UNIQUE (username)
 );
 
 CREATE TABLE helmes.user_company_reference (
@@ -28,5 +28,6 @@ CREATE TABLE helmes.user_company_reference (
     user_id BIGINT,
     company_id BIGINT,
     FOREIGN KEY (company_id) REFERENCES helmes.sector(sector_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES helmes.user(user_id)  ON UPDATE CASCADE ON DELETE CASCADE
-)
+    FOREIGN KEY (user_id) REFERENCES helmes.user(user_id)  ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT user_can_only_have_one_company UNIQUE (user_id)
+);

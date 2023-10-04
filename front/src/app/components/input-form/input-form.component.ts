@@ -113,12 +113,13 @@ export class InputFormComponent implements OnInit {
       {
         if (response && response.message) {
           this.message = response.message;
+          this.sectorId = company.companySectorId;
         }
       })
       .catch((error: any) => {
           this.message = 'Bad request. Please check your input data.';
       });
-    }
+  }
 
   /**
    * This method is initialized when the page is loaded and loads the users company details if the user has a company.
