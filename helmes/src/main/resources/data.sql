@@ -1,5 +1,3 @@
-\c dwh;
-
 -- helped to generate: https://aihelperbot.com/app
 
 DELETE FROM helmes.sector;

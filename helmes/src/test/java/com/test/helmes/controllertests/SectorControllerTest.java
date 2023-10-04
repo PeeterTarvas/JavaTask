@@ -37,8 +37,11 @@ public class SectorControllerTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    /**
+     * Test getting all the sectors.
+     */
     @Test
-    public void testGetSectors() throws Exception {
+    public void testGetSectors() {
         List<SectorDto> sectorDtoList = Arrays.asList(
                 new SectorDto(1, "Sector A", null),
                 new SectorDto(2, "Sector B", null)

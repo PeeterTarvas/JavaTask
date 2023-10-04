@@ -19,6 +19,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+/**
+ * This class tests SectorService methods.
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 public class SectorServiceTest {
@@ -35,14 +38,15 @@ public class SectorServiceTest {
 
     @BeforeEach
     public void setUp() {
-        // Reset mock interactions before each test
         Mockito.reset(sectorRepository);
         Mockito.reset(converterService);
     }
 
+    /**
+     * This tests getting SectorDtos from the method getSectorDtos.
+     */
     @Test
     public void testGetSectorDtos() {
-        // Arrange
         List<SectorDbo> sectorDbos = Arrays.asList(
                 new SectorDbo(1,"Sector1", 0),
                 new SectorDbo(2,"Sector2", 0)
@@ -57,10 +61,8 @@ public class SectorServiceTest {
         when(converterService.convertToSectorDto(sectorDbos.get(0))).thenReturn(expectedSectorDtos.get(0));
         when(converterService.convertToSectorDto(sectorDbos.get(1))).thenReturn(expectedSectorDtos.get(1));
 
-        // Act
         List<SectorDto> resultSectorDtos = sectorService.getSectorDtos();
 
-        // Assert
         assertEquals(expectedSectorDtos.size(), resultSectorDtos.size());
         for (int i = 0; i < expectedSectorDtos.size(); i++) {
             assertEquals(expectedSectorDtos.get(i), resultSectorDtos.get(i));

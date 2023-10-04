@@ -21,6 +21,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+/**
+ * This class tests UserDetailsService service class.
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 public class UserDetailsServiceTest {
@@ -40,30 +43,31 @@ public class UserDetailsServiceTest {
         Mockito.reset(converterService);
     }
 
+    /**
+     * This tests loading a user by username when the user exists.
+     */
     @Test
     public void testLoadUserByUsernameUserExists() {
-        // Arrange
         String username = "testUser";
         UserDbo userDbo = new UserDbo(1L, username, "password");
 
         when(userRepository.getUserDboByUsername(username)).thenReturn(Optional.of(userDbo));
         when(converterService.convertToUserDto(userDbo)).thenReturn(new UserDto(username, "password", null));
 
-        // Act
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-        // Assert
         assertEquals(username, userDetails.getUsername());
     }
 
+    /**
+     *  Tests loading user by a username that does not exist.
+     */
     @Test
     public void testLoadUserByUsernameUserDoesNotExist() {
-        // Arrange
         String username = "nonExistentUser";
 
         when(userRepository.getUserDboByUsername(username)).thenReturn(Optional.empty());
 
-        // Act and Assert
         UsernameNotFoundException exception = org.junit.jupiter.api.Assertions.assertThrows(
                 UsernameNotFoundException.class,
                 () -> userDetailsService.loadUserByUsername(username)

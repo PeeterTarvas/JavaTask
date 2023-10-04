@@ -34,66 +34,65 @@ public class UserControllerTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    /**
+     * This tests a successful registering.
+     */
     @Test
-    public void testRegisterUser_Success() throws Exception {
-        // Arrange
+    public void testRegisterUserSuccess() throws Exception {
         UserDto userDto = new UserDto("username", "password", null);
         String successMessage = "Created: username";
 
         doNothing().when(userService).register(userDto);
-
-        // Act
         ResponseEntity<?> responseEntity = userController.registerUser(userDto);
 
-        // Assert
         verify(userService, times(1)).register(userDto);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         assertTrue(successMessage.contains(successMessage));
     }
 
+    /**
+     * This tests user registering with invalid data.
+     */
     @Test
-    public void testRegisterUser_InvalidData() throws Exception {
-        // Arrange
+    public void testRegisterUserInvalidData() throws Exception {
         UserDto userDto = new UserDto("invalid_username", "password", null);
         String errorMessage = "Invalid data error message";
         doThrow(new InvalidDataException(errorMessage)).when(userService).register(userDto);
 
-        // Act
         ResponseEntity<?> responseEntity = userController.registerUser(userDto);
 
-        // Assert
         verify(userService, times(1)).register(userDto);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
         assertEquals(errorMessage, responseEntity.getBody());
     }
 
+    /**
+     * This method tests successful login request.
+     */
     @Test
-    public void testLogin_Success() throws Exception {
-        // Arrange
+    public void testLoginSuccess() throws Exception {
         UserDto userDto = new UserDto("username", "password", null);
         LoginResponseDto loginResponseDto = new LoginResponseDto("token", "token");
         when(userService.login(userDto)).thenReturn(loginResponseDto);
 
-        // Act
         ResponseEntity<?> responseEntity = userController.login(userDto);
 
-        // Assert
         verify(userService, times(1)).login(userDto);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(loginResponseDto, responseEntity.getBody());
     }
 
+    /**
+     * Test login with invalid data.
+     */
     @Test
-    public void testLogin_InvalidData() throws Exception {
-        // Arrange
+    public void testLoginInvalidData() throws Exception {
         UserDto userDto = new UserDto("invalid_username", "password", null);
         String errorMessage = "Invalid data error message";
         when(userService.login(userDto)).thenThrow(new InvalidDataException(errorMessage));
 
-        // Act
         ResponseEntity<?> responseEntity = userController.login(userDto);
 
-        // Assert
         verify(userService, times(1)).login(userDto);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         assertEquals(errorMessage, responseEntity.getBody());

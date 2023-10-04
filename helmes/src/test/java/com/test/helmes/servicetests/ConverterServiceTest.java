@@ -15,7 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
+/**
+ * This tests ConverterService that tests different methods for mapping dtos to dbos and vice versa.
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ConverterServiceTest {
@@ -23,80 +25,82 @@ public class ConverterServiceTest {
     @Autowired
     private ConverterService converterService;
 
+    /**
+     * Tests converting CompanyDto to CompanyDbo.
+     */
     @Test
     public void testConvertToCompanyDbo() {
-        // Arrange
         CompanyDto companyDto = new CompanyDto("TestCompany", 1, true);
 
-        // Act
         CompanyDbo companyDbo = converterService.convertToCompanyDbo(companyDto);
 
-        // Assert
         assertEquals(companyDto.getCompanyName(), companyDbo.getCompanyName());
         assertEquals(companyDto.getCompanySectorId(), companyDbo.getCompanySectorId());
         assertEquals(companyDto.getCompanyTerms(), companyDbo.getCompanyTerms());
     }
 
+    /**
+     * Tests converting CompanyDbo to CompanyDto.
+     */
     @Test
     public void testConvertToCompanyDto() {
-        // Arrange
         CompanyDbo companyDbo = new CompanyDbo(1L, "TestCompany", 1, true);
 
-        // Act
         CompanyDto companyDto = converterService.convertToCompanyDto(companyDbo);
 
-        // Assert
         assertEquals(companyDbo.getCompanyName(), companyDto.getCompanyName());
         assertEquals(companyDbo.getCompanySectorId(), companyDto.getCompanySectorId());
         assertEquals(companyDbo.getCompanyTerms(), companyDto.getCompanyTerms());
     }
 
+    /**
+     * Tests converting SectorDbo to SectorDto.
+     */
     @Test
     public void testConvertToSectorDto() {
-        // Arrange
         SectorDbo sectorDbo = new SectorDbo(1,"TestSector", 2);
 
-        // Act
         SectorDto sectorDto = converterService.convertToSectorDto(sectorDbo);
 
-        // Assert
         assertEquals(sectorDbo.getSectorName(), sectorDto.getSectorName());
         assertEquals(sectorDbo.getSectorId(), sectorDto.getSectorId());
         assertEquals(sectorDbo.getSectorParentId(), sectorDto.getSectorParentId());
     }
 
+    /**
+     * Tests converting UserDto to UserDbo.
+     */
     @Test
     public void testConvertToUserDbo() {
-        // Arrange
         UserDto userDto = new UserDto("testUser", "password", null);
 
-        // Act
         UserDbo userDbo = converterService.convertToUserDbo(userDto);
 
-        // Assert
         assertEquals(userDto.getUsername(), userDbo.getUsername());
         assertEquals(userDto.getPassword(), userDbo.getPassword());
     }
 
+    /**
+     * Tests converting UserDbo to userDto.
+     */
     @Test
     public void testConvertToUserDto() {
-        // Arrange
         UserDbo userDbo = UserDbo.builder()
                 .username("testUser")
                 .password("password")
                 .build();
 
-        // Act
         UserDto userDto = converterService.convertToUserDto(userDbo);
 
-        // Assert
         assertEquals(userDbo.getUsername(), userDto.getUsername());
         assertEquals(userDbo.getPassword(), userDto.getPassword());
     }
 
+    /**
+     * Tests creating CompanyReferenceDbo from UserDbo and CompanyDbo.
+     */
     @Test
     public void testCreateUserCompanyReferenceDbo() {
-        // Arrange
         UserDbo userDbo = UserDbo.builder()
                 .username("testUser")
                 .password("password")
@@ -107,10 +111,8 @@ public class ConverterServiceTest {
                 .companyTerms(true)
                 .build();
 
-        // Act
         UserCompanyReferenceDbo userCompanyReferenceDbo = converterService.createUserCompanyReferenceDbo(userDbo, companyDbo);
 
-        // Assert
         assertEquals(userDbo, userCompanyReferenceDbo.getUserReference());
         assertEquals(companyDbo, userCompanyReferenceDbo.getCompanyReference());
     }

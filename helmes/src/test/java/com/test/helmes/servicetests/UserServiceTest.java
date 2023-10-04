@@ -10,8 +10,6 @@ import com.test.helmes.services.ConverterService;
 import com.test.helmes.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,8 +20,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,13 +48,14 @@ public class UserServiceTest {
 
     @BeforeEach
     public void setUp() {
-        // Reset mock interactions before each test
         Mockito.reset(userRepository, jwtTokenProvider, authenticationManager, passwordEncoder, converterService);
     }
 
+    /**
+     * Test for registering a valid user.
+     */
     @Test
-    public void testRegister_ValidUser() {
-        // Arrange
+    public void testRegisterValidUser() {
         UserDto userDto = new UserDto("testUser", "testPassword", null);
         UserDbo userDbo = new UserDbo(1L, "testUser", "encodedPassword");
 
@@ -66,22 +63,21 @@ public class UserServiceTest {
         when(converterService.convertToUserDbo(userDto)).thenReturn(userDbo);
         when(userRepository.saveAndFlush(userDbo)).thenReturn(userDbo);
 
-        // Act
         assertDoesNotThrow(() -> userService.register(userDto));
 
-        // Assert
     }
 
+    /**
+     * Test for registering a user that already exists.
+     */
     @Test
-    public void testRegister_UserAlreadyExists() {
-        // Arrange
+    public void testRegisterUserAlreadyExists() {
         UserDto userDto = new UserDto("existingUser", "testPassword", null);
         UserDbo userDbo = new UserDbo(100L, "existingUser", "testPassword");
 
         when(userRepository.saveAndFlush(any(UserDbo.class))).thenThrow(new DataAccessException("Already exists"){});
         when(converterService.convertToUserDbo(userDto)).thenReturn(userDbo);
 
-        // Act and Assert
         InvalidDataException exception = assertThrows(
                 InvalidDataException.class,
                 () -> userService.register(userDto)
@@ -89,12 +85,13 @@ public class UserServiceTest {
         assertEquals("User already exists", exception.getMessage());
     }
 
+    /**
+     * Test for registering an invalid user.
+     */
     @Test
-    public void testRegister_InvalidUser() {
-        // Arrange
+    public void testRegisterInvalidUser() {
         UserDto userDto = new UserDto(" ", " ", null);
 
-        // Act and Assert
         InvalidDataException exception = assertThrows(
                 InvalidDataException.class,
                 () -> userService.register(userDto)
@@ -102,31 +99,32 @@ public class UserServiceTest {
         assertEquals("No username or password", exception.getMessage());
     }
 
+    /**
+     * This tests user login with valid credentials.
+     */
     @Test
-    public void testLogin_ValidUser() throws InvalidDataException {
-        // Arrange
+    public void testLoginValidUser() throws InvalidDataException {
         UserDto userDto = new UserDto("testUser", "testPassword", null);
-        UserDbo userDbo = new UserDbo(1L, "testUser", "encodedPassword");
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword());
+        Authentication authentication = Mockito.mock(Authentication.class);
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(authentication);  // Mocking the authenticate method
         doReturn("jwtToken").when(jwtTokenProvider).generateToken(any(String.class));
-        // Act
+        Mockito.when(authentication.getPrincipal()).thenReturn(userDto);
         LoginResponseDto response = userService.login(userDto);
 
-        // Assert
         assertNotNull(response);
         assertEquals(userDto.getUsername(), response.getUsername());
         assertEquals("jwtToken", response.getToken());
     }
 
+    /**
+     * Test user login with invalid credentials.
+     */
     @Test
-    public void testLogin_InvalidUser() {
-        // Arrange
+    public void testLoginInvalidUser() {
         UserDto userDto = new UserDto(" ", " ", null);
 
-        // Act and Assert
         InvalidDataException exception = assertThrows(
                 InvalidDataException.class,
                 () -> userService.login(userDto)
@@ -134,15 +132,16 @@ public class UserServiceTest {
         assertEquals("Wrong username or password", exception.getMessage());
     }
 
+    /**
+     * Test for user login with bad credentials.
+     */
     @Test
-    public void testLogin_BadCredentials() {
-        // Arrange
+    public void testLoginBadCredentials() {
         UserDto userDto = new UserDto("testUser", "testPassword", null);
 
 
         doThrow(BadCredentialsException.class).when(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
 
-        // Act and Assert
         InvalidDataException exception = assertThrows(
                 InvalidDataException.class,
                 () -> userService.login(userDto)
@@ -150,27 +149,27 @@ public class UserServiceTest {
         assertEquals("Bad credentials", exception.getMessage());
     }
 
+    /**
+     * Method tests checking the validity of a valid user.
+     */
     @Test
-    public void testIsValidUser_ValidUser() {
-        // Arrange
+    public void testIsValidUserValidUser() {
         UserDto userDto = new UserDto("testUser", "testPassword", null);
 
-        // Act
         boolean isValid = userService.isValidUser(userDto);
 
-        // Assert
         assertTrue(isValid);
     }
 
+    /**
+     * Test checking the validity of an invalid user.
+     */
     @Test
-    public void testIsValidUser_InvalidUser() {
-        // Arrange
+    public void testIsValidUserInvalidUser() {
         UserDto userDto = new UserDto(" ", " ", null);
 
-        // Act
         boolean isValid = userService.isValidUser(userDto);
 
-        // Assert
         assertFalse(isValid);
     }
 }

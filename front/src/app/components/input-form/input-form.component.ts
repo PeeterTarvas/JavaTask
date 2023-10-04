@@ -56,14 +56,16 @@ export class InputFormComponent implements OnInit {
   async getUserCompany(): Promise<CompanyDto> {
     return new Promise<CompanyDto>((resolve, reject) => {
       this.connection.get(sessionStorage.getItem('username') + "/get").then(
-        r => r.subscribe(
-          (comp) => {
-            resolve(comp);
-          },
-          (error) => {
-            reject(error);
+        (r) => {
+          try {
+            r.subscribe(
+              (comp) => {
+                resolve(comp);
+              })
+          } catch (e) {
+
           }
-        )
+        }
       );
     });
   }
@@ -131,7 +133,9 @@ export class InputFormComponent implements OnInit {
       if (this.selectorSelectComponent) {
         this.sector = this.selectorSelectComponent.setSelectedSector(this.sectorId);
       }
-    } catch (e) {}
+    } catch (e) {
+
+    }
   }
 
 

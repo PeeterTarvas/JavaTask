@@ -21,8 +21,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     public static final String AUTHORIZATION = "Authorization";
     public static final String BEARER_ = "Bearer ";
-    private final JwtTokenProvider jwtTokenProvider;
-    private final UserDetailsService userDetails;
+    private JwtTokenProvider jwtTokenProvider;
+    private UserDetailsService userDetails;
 
     @Lazy
     @Autowired
@@ -35,7 +35,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
      * Provides the authentication token that tje user os authenticated with.
      * Creates a new token, adds the http request to it and then returns the newly generated token.
      */
-    private UsernamePasswordAuthenticationToken buildAuthToken(UserDetails userDetails, HttpServletRequest request) {
+    public UsernamePasswordAuthenticationToken buildAuthToken(UserDetails userDetails, HttpServletRequest request) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -45,10 +45,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     /**
      * return the username inside a jwt.
      */
-    private String getUsername(Optional<String> token) {
+    public String getUsername(Optional<String> token) {
         try {
             return jwtTokenProvider.getUsernameFormToken(token.get());
-
         } catch (RuntimeException e) {
             return null;
         }
@@ -74,7 +73,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
      *   so that the user has been authenticated.
      */
     @Override
-    protected void doFilterInternal(jakarta.servlet.http.HttpServletRequest request,
+    public void doFilterInternal(jakarta.servlet.http.HttpServletRequest request,
                                     jakarta.servlet.http.HttpServletResponse response,
                                     jakarta.servlet.FilterChain filterChain)
             throws jakarta.servlet.ServletException, IOException {
@@ -96,5 +95,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
+    }
+
+    public void setUserDetails(UserDetailsService userDetails) {
+        this.userDetails = userDetails;
+    }
+
+    public void setJwtTokenProvider(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 }

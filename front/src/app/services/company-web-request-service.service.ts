@@ -49,8 +49,8 @@ export class CompanyWebRequestServiceService extends ConnectionService {
    * @param body of the request.
    */
   override async get(api_path: string, body?: any): Promise<Observable<CompanyDto>> {
-    const options: {headers: HttpHeaders} = this.getHeaders();
-    return super.get(api_path, options);
+      const options: { headers: HttpHeaders } = this.getHeaders();
+      return super.get(api_path, options);
   }
 
   /**

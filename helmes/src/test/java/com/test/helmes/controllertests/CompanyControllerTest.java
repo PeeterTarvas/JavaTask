@@ -7,8 +7,6 @@ import com.test.helmes.errors.InvalidDataException;
 import com.test.helmes.services.CompanyService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,16 +14,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import static org.mockito.BDDMockito.given;
-
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * This class contains unit tests for the {@link CompanyController} class.
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 public class CompanyControllerTest {
@@ -37,12 +34,14 @@ public class CompanyControllerTest {
     @Autowired
     private CompanyController companyController;
 
-
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
+    /**
+     * Test for saving a company with valid data in the application.
+     */
     @Test
     public void testSaveCompanySuccess() throws InvalidDataException {
         CompanyDto companyDto = new CompanyDto("test", 1, true);
@@ -57,6 +56,9 @@ public class CompanyControllerTest {
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
     }
 
+    /**
+     * Test saving a company with invalid data.
+     */
     @Test
     public void testSaveCompanyInvalidDataException() throws InvalidDataException {
         CompanyDto companyDto = new CompanyDto("test", 1, true);
@@ -69,6 +71,9 @@ public class CompanyControllerTest {
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
+    /**
+     * Test updating a company with valid data.
+     */
     @Test
     public void testUpdateCompanySuccess() throws InvalidDataException {
         CompanyDto companyDto = new CompanyDto("test", 1, true);
@@ -82,6 +87,9 @@ public class CompanyControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
+    /**
+     * Test updating a company with invalid data.
+     */
     @Test
     public void testUpdateCompanyInvalidDataException() throws InvalidDataException {
         CompanyDto companyDto = new CompanyDto("test", 1, true);
@@ -94,6 +102,9 @@ public class CompanyControllerTest {
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
+    /**
+     * Test for getting a user's company when the company exists.
+     */
     @Test
     public void testGetUsersCompanyExists() {
         String username = "testUser";
@@ -113,6 +124,9 @@ public class CompanyControllerTest {
         assertTrue(responseBody.getCompanyTerms());
     }
 
+    /**
+     * Test for getting a user's company when the company does not exist.
+     */
     @Test
     public void testGetUsersCompanyNotFound() {
         String username = "testUser";

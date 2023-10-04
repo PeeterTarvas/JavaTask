@@ -15,7 +15,8 @@ import java.util.HashMap;
 @Getter
 @Service
 public class JwtTokenProvider {
-    private final JwtConfig jwtConfig;
+
+    private JwtConfig jwtConfig;
 
 
     @Autowired
@@ -79,5 +80,9 @@ public class JwtTokenProvider {
                 .getBody()
                 .getExpiration();
         return date.after(new Date());
+    }
+
+    public void setJwtConfig(JwtConfig jwtConfig) {
+        this.jwtConfig = jwtConfig;
     }
 }

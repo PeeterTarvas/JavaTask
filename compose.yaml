@@ -1,0 +1,52 @@
+services:
+
+  postgres:
+    container_name: database
+    image: 'postgres:latest'
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-root}
+      - POSTGRES_ROOT_PASSWORD=${POSTGRES_ROOT_PASSWORD:-postgres}
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./helmes/src/main/resources/database.sql:/docker-entrypoint-initdb.d/database.sql
+      - ./helmes/src/main/resources/data.sql:/docker-entrypoint-initdb.d/data.sql
+    networks:
+      - net
+
+  back-end:
+    container_name: back-end
+    build:
+      dockerfile: helmes/Dockerfile
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=${DATASOURCE_USERNAME:-postgres}
+      - SPRING_DATASOURCE_PASSWORD=${DATASOURCE_PASSWORD:-root}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+      - SPRING_PROFILES_ACTIVE=local
+      - AWS_REGION=local
+      - ENVIRONMENT=local
+      - DATASOURCE_USERNAME=${DATASOURCE_USERNAME:-postgres}
+      - DATASOURCE_PASSWORD=${DATASOURCE_PASSWORD:-root}
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres
+    networks:
+      - net
+
+  front-end:
+    container_name: front-end
+    build:
+      dockerfile: front/Dockerfile
+    ports:
+      - '4200:4200'
+    depends_on:
+      - back-end
+    networks:
+      - net
+
+networks:
+  net:
+    driver: bridge
