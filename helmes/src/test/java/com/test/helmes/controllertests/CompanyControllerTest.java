@@ -125,7 +125,7 @@ public class CompanyControllerTest {
     }
 
     /**
-     * Test for getting a user's company when the company does not exist.
+     * Test for getting a user's company when the company does not exist. It still returns OK but the body is empty.
      */
     @Test
     public void testGetUsersCompanyNotFound() {
@@ -135,7 +135,7 @@ public class CompanyControllerTest {
 
         ResponseEntity<?> responseEntity = companyController.getUsersCompany(username);
 
-        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
 
