@@ -42,7 +42,6 @@ services:
       dockerfile: front/Dockerfile
     ports:
       - "80:80"
-      - '4200:4200'
     depends_on:
       - back-end
     networks:

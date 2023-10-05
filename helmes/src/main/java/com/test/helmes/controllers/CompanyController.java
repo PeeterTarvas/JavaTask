@@ -72,7 +72,7 @@ public class CompanyController {
         if (companyDto.isPresent()) {
             return ResponseEntity.status(HttpStatus.OK).body(companyDto.get());
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }
