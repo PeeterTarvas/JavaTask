@@ -17,6 +17,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import { RegisterComponent } from './components/register/register.component';
 import {MatRadioModule} from "@angular/material/radio";
+import {MatOptionModule} from "@angular/material/core";
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import {MatRadioModule} from "@angular/material/radio";
         ReactiveFormsModule,
         MatInputModule,
         MatButtonModule,
-        MatRadioModule
+        MatRadioModule,
+        MatOptionModule
     ],
   providers: [],
   bootstrap: [AppComponent]
