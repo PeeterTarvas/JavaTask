@@ -15,9 +15,13 @@
   - [16.18.10](https://nodejs.org/dist/v16.18.1/)
   - [Current - 18.18.0](https://nodejs.org/en/download)
 
-## 2 ways of running the application
+## Running tests
+  - cd into helmes/helmes
+  - run 'docker compose up' - creates database instance that app uses and is needed for tests
+  - ./gradlew test
+  - I tried to make tests run on H2 database, but something in my setup failed and I could not get it to work 
 
-#### NB!! If you want to run tests then make sure that the docker compose inside helmes/helmes is up !!
+## 2 ways of running the application
 
 ## Running manually:
     - You need to have dependencies:
@@ -30,7 +34,7 @@
         - `cd helmes`
         - `docker compose up`
     - Then create jar file for back-end and run it:
-        - `./gradlew build`
+        - `./gradlew build` -> be sure that docker compose database is up becasue we need
         - now you have a executable jar file inside the helmes/build/libs folder
         - execute the jar file with `java -jar build/libs/helmes-0.0.1-SNAPSHOT.jar`
     - After that running front end:
