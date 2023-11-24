@@ -1,6 +1,6 @@
 # Helmes Java task 
 
-[Link to task description]("https://www.helmes.com/java-task/")
+[Link to task description](https://www.helmes.com/java-task/)
 
 ## This project has two subprojects inside of it:
     - helmes is the back-end made with Spring Boot that runs on port 8080
