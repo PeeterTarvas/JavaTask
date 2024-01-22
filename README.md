@@ -57,4 +57,17 @@
     - run docker compose up
     - navigate to 'http://localhost/' on your browser
 
+
+
+TODO:
+Implement validation with beans
+Front-end validations
+Front-end authentication
+Sector sql injection is possible
+Transaction doesn't need a rollback
+Implement a solution that one user can have multiple companies
+DTO to Records
+Database container setup
+Logging
+
         
