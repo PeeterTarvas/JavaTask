@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -45,11 +46,11 @@ public class CompanyServiceTest {
     @Autowired
     private CompanyService companyService;
 
-
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
+
 
     /**
      * This tests the saving of a company, should be successful.
@@ -210,6 +211,7 @@ public class CompanyServiceTest {
     @Test
     public void testIsValidValidData() {
         CompanyDto companyDto = new CompanyDto("Test Company", 1, true);
+
 
         boolean result = companyService.isValid(companyDto);
 

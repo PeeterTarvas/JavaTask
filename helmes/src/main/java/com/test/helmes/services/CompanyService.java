@@ -49,10 +49,10 @@ public class CompanyService {
      * @param companyDto that holds the company details.
      * @throws InvalidDataException if user has invalid details about company or user is not present.
      */
-    @Transactional(rollbackOn = InvalidDataException.class)
+    @Transactional()
     public void saveCompany(String username, CompanyDto companyDto) throws InvalidDataException {
         Optional<UserDbo> userDbo = userRepository.getUserDboByUsername(username);
-        if (isValid(companyDto) && userDbo.isPresent()) {
+        if (userDbo.isPresent()) {
             try {
                 saveNewCompany(userDbo.get(), companyDto);
             } catch (NoDataExistsException e) {
@@ -71,15 +71,14 @@ public class CompanyService {
      * @param companyDto that holds the updated details.
      * @throws InvalidDataException if the details of the company are wrong or user is not present.
      */
-    @Transactional(rollbackOn = InvalidDataException.class)
+    @Transactional()
     public void updateCompany(String username, CompanyDto companyDto) throws InvalidDataException {
         Optional<UserDbo> userDbo = userRepository.getUserDboByUsername(username);
-        if (isValid(companyDto) && userDbo.isPresent()) {
+        if (userDbo.isPresent()) {
             try {
                 Optional<UserCompanyReferenceDbo> userCompanyReference = userHasCompany(userDbo.get());
-                if (userCompanyReference.isPresent()) {
-                    updateCompanyDetails(companyDto, userCompanyReference.get());
-                }
+                userCompanyReference.ifPresent(userCompanyReferenceDbo ->
+                        updateCompanyDetails(companyDto, userCompanyReferenceDbo));
             } catch (NoDataExistsException e) {
                 throw new InvalidDataException("Bad input!");
             }
@@ -87,6 +86,35 @@ public class CompanyService {
             throw new InvalidDataException("Missing input!");
         }
     }
+
+    /**
+     * This method is for getting the company of a user by only providing a username of the user.
+     * This is mainly used when user logs-in and ngInit requests the users company to display already
+     * made company's info.
+     * First check if the user exists by getting the users database object by his name.
+     *  - if the user exists then check for a user-company reference object in the database
+     *   - if the reference exists then get the references company object and return it as an optional
+     *  else return an empty optional.
+     * @param username of the account who requests his company.
+     * @return an optional of the company data transfer object(CompanyDto).
+     */
+    @Transactional()
+    public Optional<CompanyDto> getUsersCompany(String username) {
+        Optional<UserDbo> userDbo = userRepository.getUserDboByUsername(username);
+        if (userDbo.isPresent()) {
+            Optional<UserCompanyReferenceDbo> userCompanyReferenceDbo = userHasCompany(userDbo.get());
+            if (userCompanyReferenceDbo.isPresent()) {
+                return Optional.of(
+                        converterService.convertToCompanyDto(userCompanyReferenceDbo.get()
+                                .getCompanyReference()
+                        )
+                );
+            }
+        }
+        return Optional.empty();
+    }
+
+
     /**
      * Method for updating company in the database. This is called in updateCompany method.
      * if the user already has a company in the database. Then that company is updated with the new details.
@@ -120,29 +148,6 @@ public class CompanyService {
         Optional<CompanyDbo> company = companyRepository.getCompanyDboByCompanyName(companyDto.getCompanyName());
         UserCompanyReferenceDbo userCompanyReferenceDbo = converterService.createUserCompanyReferenceDbo(userDbo, company.get());
         userCompanyReferenceRepository.save(userCompanyReferenceDbo);
-    }
-
-    /**
-     * This method is for getting the company of a user by only providing a username of the user.
-     * This is mainly used when user logs-in and ngInit requests the users company to display already
-     * made company's info.
-     * First check if the user exists by getting the users database object by his name.
-     *  - if the user exists then check for a user-company reference object in the database
-     *   - if the reference exists then get the references company object and return it as an optional
-     *  else return an empty optional.
-     * @param username of the account who requests his company.
-     * @return an optional of the company data transfer object(CompanyDto).
-     */
-    public Optional<CompanyDto> getUsersCompany(String username) {
-        Optional<UserDbo> userDbo = userRepository.getUserDboByUsername(username);
-        if (userDbo.isPresent()) {
-            Optional<UserCompanyReferenceDbo> userCompanyReferenceDbo = userHasCompany(userDbo.get());
-            if (userCompanyReferenceDbo.isPresent()) {
-                return Optional.of(
-                        converterService.convertToCompanyDto(userCompanyReferenceDbo.get().getCompanyReference()));
-            }
-        }
-        return Optional.empty();
     }
 
     /**

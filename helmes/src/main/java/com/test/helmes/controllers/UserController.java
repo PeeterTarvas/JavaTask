@@ -5,6 +5,7 @@ import com.test.helmes.dtos.LoginResponseDto;
 import com.test.helmes.dtos.UserDto;
 import com.test.helmes.errors.InvalidDataException;
 import com.test.helmes.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class UserController {
      * @return a response if the account creation is successful.
      */
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<?> registerUser(@RequestBody @Valid UserDto userDto) {
         try {
             this.userService.register(userDto);
         } catch (InvalidDataException e) {
@@ -46,7 +47,7 @@ public class UserController {
      * @return the login response if the login is successful, else return an error.
      */
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserDto userDto) {
+    public ResponseEntity<?> login(@RequestBody @Valid UserDto userDto) {
         try {
             LoginResponseDto loginResponseDto =  userService.login(userDto);
             return ResponseEntity.status(HttpStatus.OK).body(loginResponseDto);

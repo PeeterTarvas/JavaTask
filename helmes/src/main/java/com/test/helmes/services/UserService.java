@@ -7,6 +7,7 @@ import com.test.helmes.dtos.LoginResponseDto;
 import com.test.helmes.dtos.UserDto;
 import com.test.helmes.errors.InvalidDataException;
 import com.test.helmes.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -50,6 +51,7 @@ public class UserService {
      * @param userDto with the details of the account.
      * @throws InvalidDataException if user already exists(username already exists) or their data is invalid.
      */
+    @Transactional()
     public void register(UserDto userDto) throws InvalidDataException {
         if (isValidUser(userDto)) {
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));

@@ -1,10 +1,9 @@
 package com.test.helmes.dtos;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 /**
  * This object is for sending the sectors details between the front-end and back-end.
@@ -15,10 +14,13 @@ import lombok.Setter;
 @AllArgsConstructor
 public class SectorDto {
 
+    @NotNull
     private Integer sectorId;
 
+    @NotBlank
     private String sectorName;
 
+    @NotNull
     private Integer sectorParentId;
 
 

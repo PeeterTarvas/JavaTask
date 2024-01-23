@@ -4,6 +4,7 @@ import com.test.helmes.dtos.CompanyDto;
 import com.test.helmes.errors.ErrorResponse;
 import com.test.helmes.errors.InvalidDataException;
 import com.test.helmes.services.CompanyService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class CompanyController {
      * @param username of the player that requests the update to be made.
      */
     @PostMapping("/{username}/save")
-    public ResponseEntity<?> saveCompany(@RequestBody CompanyDto companyDto, @PathVariable String username) {
+    public ResponseEntity<?> saveCompany(@RequestBody @Valid CompanyDto companyDto, @PathVariable String username) {
         try {
             companyService.saveCompany(username, companyDto);
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -50,7 +51,7 @@ public class CompanyController {
      * @return a response entity containing either an OK response or an error.
      */
     @PutMapping("/{username}/update")
-    public ResponseEntity<?> updateCompany(@RequestBody CompanyDto companyDto, @PathVariable String username) {
+    public ResponseEntity<?> updateCompany(@RequestBody @Valid CompanyDto companyDto, @PathVariable String username) {
         try {
             companyService.updateCompany(username, companyDto);
         return ResponseEntity.status(HttpStatus.OK)
