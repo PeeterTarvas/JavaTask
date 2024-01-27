@@ -18,12 +18,12 @@ public class SectorService {
 
     private final SectorRepository sectorRepository;
 
-    private final ConverterService converterService;
+    private final MapperService mapperService;
 
     @Autowired
-    public SectorService(SectorRepository sectorRepository, ConverterService converterService) {
+    public SectorService(SectorRepository sectorRepository, MapperService mapperService) {
         this.sectorRepository = sectorRepository;
-        this.converterService = converterService;
+        this.mapperService = mapperService;
     }
 
 
@@ -34,7 +34,7 @@ public class SectorService {
     public List<SectorDto> getSectorDtos() {
         return sectorRepository.findAll()
                 .stream()
-                .map(converterService::convertToSectorDto)
+                .map(mapperService::convertToSectorDto)
                 .collect(Collectors.toList());
     }
 

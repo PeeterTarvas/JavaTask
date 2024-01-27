@@ -16,7 +16,7 @@ public interface UserCompanyReferenceRepository extends JpaRepository<UserCompan
 
     /**
      * This method makes the reference object accessible by the userDbo.
-     * @param userDbo is holds the users details whos company we want to get with the reference object.
+     * @param userDbo is holds the users details who's company we want to get with the reference object.
      * @return optional of the reference object.
      */
     Optional<UserCompanyReferenceDbo> getUserCompanyReferenceDboByUserReference(UserDbo userDbo);

@@ -1,17 +1,14 @@
 package com.test.helmes.services;
 
-
+import com.test.helmes.errors.Error;
 import com.test.helmes.config.jwt.JwtTokenProvider;
 import com.test.helmes.dbos.UserDbo;
 import com.test.helmes.dtos.LoginResponseDto;
 import com.test.helmes.dtos.UserDto;
-import com.test.helmes.errors.InvalidDataException;
 import com.test.helmes.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,19 +25,19 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
 
-    private final ConverterService converterService;
+    private final MapperService mapperService;
 
     @Autowired
     public UserService(UserRepository repository,
                        JwtTokenProvider jwtTokenProvider,
                        AuthenticationManager authenticationManager,
                        PasswordEncoder passwordEncoder,
-                       ConverterService converterService) {
+                       MapperService mapperService) {
         this.userRepository = repository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
-        this.converterService = converterService;
+        this.mapperService = mapperService;
     }
 
     /**
@@ -49,21 +46,17 @@ public class UserService {
      *  - encoding their password
      *  - save the account
      * @param userDto with the details of the account.
-     * @throws InvalidDataException if user already exists(username already exists) or their data is invalid.
+     * @throws Error if user already exists(username already exists) or their data is invalid.
      */
     @Transactional()
-    public void register(UserDto userDto) throws InvalidDataException {
-        if (isValidUser(userDto)) {
+    public void register(UserDto userDto) throws Error {
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-            UserDbo userDbo = converterService.convertToUserDbo(userDto);
+            UserDbo userDbo = mapperService.convertToUserDbo(userDto);
             try {
                 userRepository.saveAndFlush(userDbo);
-            } catch (DataAccessException ex) {
-                throw new InvalidDataException("User already exists");
+            } catch (Exception e) {
+                throw new Error("User already exists");
             }
-        } else {
-            throw new InvalidDataException("No username or password");
-        }
     }
 
     /**
@@ -75,33 +68,17 @@ public class UserService {
      * - Generate the token with the users token
      * @param userDto with the account details of the user.
      * @return a data transfer object that contains the accounts username and jwt.
-     * @throws InvalidDataException if password or username is incorrect or when their data isn't valid.
+     * @throws Error if password or username is incorrect or when their data isn't valid.
      */
-    public LoginResponseDto login(UserDto userDto) throws InvalidDataException {
-        if (isValidUser(userDto)) {
+    public LoginResponseDto login(UserDto userDto) {
             Authentication authentication;
-            try {
-                 authentication = authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                userDto.getUsername(), userDto.getPassword()));
-            } catch (BadCredentialsException e) {
-                throw new InvalidDataException("Bad credentials");
-            }
+            authentication = authenticationManager.authenticate(
+                   new UsernamePasswordAuthenticationToken(
+                           userDto.getUsername(), userDto.getPassword()));
             UserDto principle = (UserDto) authentication.getPrincipal();
             String token = jwtTokenProvider.generateToken(principle.getUsername());
             return new LoginResponseDto(principle.getUsername(), token);
-        } else {
-            throw new InvalidDataException("Wrong username or password");
-        }
     }
 
-    /**
-     * Initial validation of the users details.
-     * Checks if the username or password of the sent UserDto object isn't empty.
-     * @param userDto with the accounts details.
-     * @return true if the details aren't empty.
-     */
-    public boolean isValidUser(UserDto userDto) {
-        return (!userDto.getUsername().isBlank() && !userDto.getPassword().isBlank());
-    }
+
 }

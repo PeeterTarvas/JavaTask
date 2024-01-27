@@ -18,12 +18,12 @@ import java.util.Optional;
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
     private final UserRepository userRepository;
-    private final ConverterService converterService;
+    private final MapperService mapperService;
 
     @Autowired
-    public UserDetailsService(UserRepository userRepository, ConverterService converterService) {
+    public UserDetailsService(UserRepository userRepository, MapperService mapperService) {
         this.userRepository = userRepository;
-        this.converterService = converterService;
+        this.mapperService = mapperService;
     }
 
     /**
@@ -35,11 +35,11 @@ public class UserDetailsService implements org.springframework.security.core.use
      * @throws UsernameNotFoundException if an account with that username doesn't exists.
      */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws Error {
         Optional<UserDbo> userDbo = userRepository.getUserDboByUsername(username);
         if (userDbo.isEmpty()) {
-            throw new UsernameNotFoundException("No user found");
+            throw new Error("No user found");
         }
-        return converterService.convertToUserDto(userDbo.get());
+        return mapperService.convertToUserDto(userDbo.get());
     }
 }

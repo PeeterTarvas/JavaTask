@@ -3,8 +3,9 @@ package com.test.helmes.servicetests;
 
 import com.test.helmes.dbos.UserDbo;
 import com.test.helmes.dtos.UserDto;
+import com.test.helmes.errors.Error;
 import com.test.helmes.repositories.UserRepository;
-import com.test.helmes.services.ConverterService;
+import com.test.helmes.services.MapperService;
 import com.test.helmes.services.UserDetailsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,12 +36,12 @@ public class UserDetailsServiceTest {
     private UserRepository userRepository;
 
     @MockBean
-    private ConverterService converterService;
+    private MapperService mapperService;
 
     @BeforeEach
     public void setUp() {
         Mockito.reset(userRepository);
-        Mockito.reset(converterService);
+        Mockito.reset(mapperService);
     }
 
     /**
@@ -52,7 +53,7 @@ public class UserDetailsServiceTest {
         UserDbo userDbo = new UserDbo(1L, username, "password");
 
         when(userRepository.getUserDboByUsername(username)).thenReturn(Optional.of(userDbo));
-        when(converterService.convertToUserDto(userDbo)).thenReturn(new UserDto(username, "password", null));
+        when(mapperService.convertToUserDto(userDbo)).thenReturn(new UserDto(username, "password", null));
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
@@ -68,8 +69,8 @@ public class UserDetailsServiceTest {
 
         when(userRepository.getUserDboByUsername(username)).thenReturn(Optional.empty());
 
-        UsernameNotFoundException exception = org.junit.jupiter.api.Assertions.assertThrows(
-                UsernameNotFoundException.class,
+        java.lang.Error exception = org.junit.jupiter.api.Assertions.assertThrows(
+                java.lang.Error.class,
                 () -> userDetailsService.loadUserByUsername(username)
         );
         assertEquals("No user found", exception.getMessage());

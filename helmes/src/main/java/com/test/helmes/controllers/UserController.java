@@ -1,9 +1,10 @@
 package com.test.helmes.controllers;
 
 
+import com.test.helmes.controllers.helper.ResponseHandler;
 import com.test.helmes.dtos.LoginResponseDto;
 import com.test.helmes.dtos.UserDto;
-import com.test.helmes.errors.InvalidDataException;
+import com.test.helmes.errors.Error;
 import com.test.helmes.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,12 @@ public class UserController {
 
     private final UserService userService;
 
+    private final ResponseHandler responseHandler;
+
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, ResponseHandler responseHandler) {
         this.userService = userService;
+        this.responseHandler = responseHandler;
     }
 
     /**
@@ -35,10 +39,12 @@ public class UserController {
     public ResponseEntity<?> registerUser(@RequestBody @Valid UserDto userDto) {
         try {
             this.userService.register(userDto);
-        } catch (InvalidDataException e) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
+            return responseHandler.returnResponse(HttpStatus.CREATED,
+                    "{\"message\": \"Created: " + userDto.getUsername() + "\"}");
+        } catch (Error error) {
+            return responseHandler.returnErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY,
+                    error);
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\": \"Created: " + userDto.getUsername() + "\"}");
     }
 
     /**
@@ -48,12 +54,8 @@ public class UserController {
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid UserDto userDto) {
-        try {
-            LoginResponseDto loginResponseDto =  userService.login(userDto);
-            return ResponseEntity.status(HttpStatus.OK).body(loginResponseDto);
-        } catch (InvalidDataException e) {
-             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        LoginResponseDto loginResponseDto =  userService.login(userDto);
+        return responseHandler.returnResponse(HttpStatus.OK, loginResponseDto);
     }
 
 }

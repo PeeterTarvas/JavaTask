@@ -7,7 +7,7 @@ import com.test.helmes.dbos.UserDbo;
 import com.test.helmes.dtos.CompanyDto;
 import com.test.helmes.dtos.SectorDto;
 import com.test.helmes.dtos.UserDto;
-import com.test.helmes.services.ConverterService;
+import com.test.helmes.services.MapperService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,10 +20,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ConverterServiceTest {
+public class MapperServiceTest {
 
     @Autowired
-    private ConverterService converterService;
+    private MapperService mapperService;
 
     /**
      * Tests converting CompanyDto to CompanyDbo.
@@ -32,7 +32,7 @@ public class ConverterServiceTest {
     public void testConvertToCompanyDbo() {
         CompanyDto companyDto = new CompanyDto("TestCompany", 1, true);
 
-        CompanyDbo companyDbo = converterService.convertToCompanyDbo(companyDto);
+        CompanyDbo companyDbo = mapperService.convertToCompanyDbo(companyDto);
 
         assertEquals(companyDto.getCompanyName(), companyDbo.getCompanyName());
         assertEquals(companyDto.getCompanySectorId(), companyDbo.getCompanySectorId());
@@ -46,7 +46,7 @@ public class ConverterServiceTest {
     public void testConvertToCompanyDto() {
         CompanyDbo companyDbo = new CompanyDbo(1L, "TestCompany", 1, true);
 
-        CompanyDto companyDto = converterService.convertToCompanyDto(companyDbo);
+        CompanyDto companyDto = mapperService.convertToCompanyDto(companyDbo);
 
         assertEquals(companyDbo.getCompanyName(), companyDto.getCompanyName());
         assertEquals(companyDbo.getCompanySectorId(), companyDto.getCompanySectorId());
@@ -60,7 +60,7 @@ public class ConverterServiceTest {
     public void testConvertToSectorDto() {
         SectorDbo sectorDbo = new SectorDbo(1,"TestSector", 2);
 
-        SectorDto sectorDto = converterService.convertToSectorDto(sectorDbo);
+        SectorDto sectorDto = mapperService.convertToSectorDto(sectorDbo);
 
         assertEquals(sectorDbo.getSectorName(), sectorDto.getSectorName());
         assertEquals(sectorDbo.getSectorId(), sectorDto.getSectorId());
@@ -74,7 +74,7 @@ public class ConverterServiceTest {
     public void testConvertToUserDbo() {
         UserDto userDto = new UserDto("testUser", "password", null);
 
-        UserDbo userDbo = converterService.convertToUserDbo(userDto);
+        UserDbo userDbo = mapperService.convertToUserDbo(userDto);
 
         assertEquals(userDto.getUsername(), userDbo.getUsername());
         assertEquals(userDto.getPassword(), userDbo.getPassword());
@@ -90,7 +90,7 @@ public class ConverterServiceTest {
                 .password("password")
                 .build();
 
-        UserDto userDto = converterService.convertToUserDto(userDbo);
+        UserDto userDto = mapperService.convertToUserDto(userDbo);
 
         assertEquals(userDbo.getUsername(), userDto.getUsername());
         assertEquals(userDbo.getPassword(), userDto.getPassword());
@@ -111,7 +111,7 @@ public class ConverterServiceTest {
                 .companyTerms(true)
                 .build();
 
-        UserCompanyReferenceDbo userCompanyReferenceDbo = converterService.createUserCompanyReferenceDbo(userDbo, companyDbo);
+        UserCompanyReferenceDbo userCompanyReferenceDbo = mapperService.createUserCompanyReferenceDbo(userDbo, companyDbo);
 
         assertEquals(userDbo, userCompanyReferenceDbo.getUserReference());
         assertEquals(companyDbo, userCompanyReferenceDbo.getCompanyReference());

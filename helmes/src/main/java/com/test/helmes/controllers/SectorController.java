@@ -1,5 +1,6 @@
 package com.test.helmes.controllers;
 
+import com.test.helmes.controllers.helper.ResponseHandler;
 import com.test.helmes.services.SectorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,10 +14,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/sector")
 public class SectorController {
 
-    SectorService sectorService;
+    private final SectorService sectorService;
+
+    private final ResponseHandler responseHandler;
+
 
     @Autowired
-    public SectorController(SectorService sectorService) {
+    public SectorController(SectorService sectorService, ResponseHandler responseHandler) {
+        this.responseHandler = responseHandler;
         this.sectorService = sectorService;
     }
 
@@ -25,6 +30,6 @@ public class SectorController {
      */
     @GetMapping("/getAll")
     public ResponseEntity<?> getSectors() {
-            return ResponseEntity.status(HttpStatus.OK).body(sectorService.getSectorDtos());
+            return responseHandler.returnResponse(HttpStatus.OK, sectorService.getSectorDtos());
         }
 }

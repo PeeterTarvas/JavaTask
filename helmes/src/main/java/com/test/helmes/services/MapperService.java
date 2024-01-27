@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class ConverterService {
+public class MapperService {
 
     /**
      * Convert from CompanyDto to CompanyDbo.
