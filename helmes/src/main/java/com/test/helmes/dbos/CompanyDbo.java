@@ -13,6 +13,7 @@ import java.math.BigInteger;
 @Setter
 @Getter
 @Entity
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "company", schema = "helmes")

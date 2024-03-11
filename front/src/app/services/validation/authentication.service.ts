@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, map, Observable} from 'rxjs';
-import {LoginResponse} from "../dtos/login-response";
-import {UserDto} from "../dtos/user-dto";
-import {UserWebRequestServiceService} from "./user-web-request-service.service";
+import {LoginResponse} from "../../dtos/login-response";
+import {UserDto} from "../../dtos/user-dto";
+import {UserWebRequestServiceService} from "../request/user-web-request-service.service";
 
 /**
  * This class is for handling user authentication and logging in.
@@ -40,14 +40,14 @@ export class AuthenticationService {
    * @param loginRequest
    */
   async login(loginRequest: UserDto): Promise<LoginResponse | Error> {
-      const loginResponse: LoginResponse = await this.userService.post("login", loginRequest);
-      if (loginResponse && loginResponse.token) {
+    const loginResponse: LoginResponse = await this.userService.post("login", loginRequest);
+    if (loginResponse && loginResponse.token) {
         sessionStorage.setItem('username', loginResponse.username);
         sessionStorage.setItem('token', loginResponse.token);
         this.currentUserSubject.next(loginResponse);
         return loginResponse;
       }
-      return new Error("Login failed");
+      throw new Error("Login failed");
 
   }
 

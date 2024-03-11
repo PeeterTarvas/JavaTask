@@ -11,6 +11,7 @@ import lombok.*;
 @Builder
 @Setter
 @Getter
+@ToString
 @AllArgsConstructor
 public class SectorDto {
 

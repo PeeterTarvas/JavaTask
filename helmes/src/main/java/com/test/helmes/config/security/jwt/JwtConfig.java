@@ -1,4 +1,4 @@
-package com.test.helmes.config.jwt;
+package com.test.helmes.config.security.jwt;
 
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;

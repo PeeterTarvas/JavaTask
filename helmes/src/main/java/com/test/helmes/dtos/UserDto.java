@@ -15,9 +15,9 @@ import java.util.Collections;
  */
 @Setter
 @Getter
+@ToString
 public class UserDto extends User {
 
-    @NotNull
     private String userId;
     @NotBlank
     private String username;

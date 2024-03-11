@@ -65,12 +65,12 @@ public class UserControllerTest {
 
         ErrorResponse errorResponse = responseHandler.convertErrorToErrorResponse(new Error(errorMessage));
 
-        doThrow(new java.lang.Error(errorMessage)).when(userService).register(userDto);
+        doThrow(new Error(errorMessage)).when(userService).register(userDto);
 
         ResponseEntity<?> responseEntity = userController.registerUser(userDto);
 
         verify(userService, times(1)).register(userDto);
-        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         assertEquals(errorResponse.toString(), responseEntity.getBody().toString());
     }
 
@@ -96,11 +96,11 @@ public class UserControllerTest {
     @Test
     public void testLoginInvalidData() throws Exception {
         UserDto userDto = new UserDto("invalid_username", "password", null);
-        String errorMessage = "Invalid data error message";
+        String errorMessage = "Invalid username or password";
 
         ErrorResponse errorResponse = responseHandler.convertErrorToErrorResponse(new Error(errorMessage));
 
-        when(userService.login(userDto)).thenThrow(new java.lang.Error(errorMessage));
+        when(userService.login(userDto)).thenThrow(new Error(errorMessage));
 
         ResponseEntity<?> responseEntity = userController.login(userDto);
 

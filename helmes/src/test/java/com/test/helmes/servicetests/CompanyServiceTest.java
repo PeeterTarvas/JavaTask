@@ -182,9 +182,11 @@ public class CompanyServiceTest {
 
         when(userRepository.getUserDboByUsername(username)).thenReturn(Optional.empty());
 
-        Optional<CompanyDto> result = companyService.getUsersCompany(username);
-
-        assertFalse(result.isPresent());
+        Error error = assertThrows(
+                Error.class,
+                () -> companyService.getUsersCompany(username)
+        );
+        assertEquals("Bad input!", error.getMessage());
     }
 
     /**
@@ -199,9 +201,11 @@ public class CompanyServiceTest {
         when(userCompanyReferenceRepository.getUserCompanyReferenceDboByUserReference(userDbo))
                 .thenReturn(Optional.empty());
 
-        Optional<CompanyDto> result = companyService.getUsersCompany(username);
-
-        assertFalse(result.isPresent());
+        Error error = assertThrows(
+                Error.class,
+                () -> companyService.getUsersCompany(username)
+        );
+        assertEquals("Bad input!", error.getMessage());
     }
 
 

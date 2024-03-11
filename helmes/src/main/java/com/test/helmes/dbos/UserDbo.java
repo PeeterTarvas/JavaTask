@@ -11,6 +11,7 @@ import lombok.*;
 @Setter
 @Getter
 @Entity
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "user", schema = "helmes")

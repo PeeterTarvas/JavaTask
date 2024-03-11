@@ -1,4 +1,4 @@
-package com.test.helmes.config;
+package com.test.helmes.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {ConnectionService} from "./connection.service";
 import {Observable} from "rxjs";
-import {CompanyDto} from "../dtos/company-dto";
+import {CompanyDto} from "../../dtos/company-dto";
 
 /**
  *  Connection service for handling company related request making

@@ -1,6 +1,6 @@
-package com.test.helmes.config.jwt;
+package com.test.helmes.config.security.jwt;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +16,7 @@ import java.util.Optional;
 
 
 @Lazy
+@AllArgsConstructor
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
@@ -24,15 +25,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private JwtTokenProvider jwtTokenProvider;
     private UserDetailsService userDetails;
 
-    @Lazy
-    @Autowired
-    public JwtRequestFilter(JwtTokenProvider jwtTokenProvider, UserDetailsService userDetails) {
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.userDetails = userDetails;
-    }
 
     /**
-     * Provides the authentication token that tje user os authenticated with.
+     * Provides the authentication token that the user os authenticated with.
      * Creates a new token, adds the http request to it and then returns the newly generated token.
      */
     public UsernamePasswordAuthenticationToken buildAuthToken(UserDetails userDetails, HttpServletRequest request) {

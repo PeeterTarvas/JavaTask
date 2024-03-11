@@ -7,6 +7,7 @@ import com.test.helmes.dtos.UserDto;
 import com.test.helmes.errors.Error;
 import com.test.helmes.services.UserService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
  * This is the endpoint controller for all user related logic.
  */
 @RestController
+@AllArgsConstructor
 @RequestMapping("/user")
 public class UserController {
 
@@ -23,12 +25,6 @@ public class UserController {
     private final UserService userService;
 
     private final ResponseHandler responseHandler;
-
-    @Autowired
-    public UserController(UserService userService, ResponseHandler responseHandler) {
-        this.userService = userService;
-        this.responseHandler = responseHandler;
-    }
 
     /**
      * This method is the endpoint that is called when the new user wants to register their account.
@@ -42,7 +38,7 @@ public class UserController {
             return responseHandler.returnResponse(HttpStatus.CREATED,
                     "{\"message\": \"Created: " + userDto.getUsername() + "\"}");
         } catch (Error error) {
-            return responseHandler.returnErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY,
+            return responseHandler.returnErrorResponse(HttpStatus.BAD_REQUEST,
                     error);
         }
     }
@@ -54,8 +50,14 @@ public class UserController {
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid UserDto userDto) {
-        LoginResponseDto loginResponseDto =  userService.login(userDto);
-        return responseHandler.returnResponse(HttpStatus.OK, loginResponseDto);
+        try {
+            LoginResponseDto loginResponseDto =  userService.login(userDto);
+            return responseHandler.returnResponse(HttpStatus.OK, loginResponseDto);
+        } catch (Error error) {
+            return responseHandler.returnErrorResponse(HttpStatus.BAD_REQUEST,
+                    error);
+        }
+
     }
 
 }

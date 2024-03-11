@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
-import {AuthenticationService} from "../../services/authentication.service";
+import {AuthenticationService} from "../../services/validation/authentication.service";
 import {UserDto} from "../../dtos/user-dto";
 
 /**
@@ -53,8 +53,8 @@ export class LoginPageComponent implements OnInit {
     }
     const {username, password} = this.loginForm.value
     const loginRequest: UserDto = {username: username, password: password}
-    this.authenticationService.login(loginRequest).then((response) =>
-    {
+    this.authenticationService.login(loginRequest).then((response) => {
+      console.log(response)
       if (response instanceof Error) {
         this.errorMessage = response.message;
       } else {

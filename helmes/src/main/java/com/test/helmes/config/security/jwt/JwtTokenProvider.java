@@ -1,9 +1,9 @@
-package com.test.helmes.config.jwt;
+package com.test.helmes.config.security.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -14,15 +14,10 @@ import java.util.HashMap;
  */
 @Getter
 @Service
+@AllArgsConstructor
 public class JwtTokenProvider {
 
     private JwtConfig jwtConfig;
-
-
-    @Autowired
-    public JwtTokenProvider(JwtConfig jwtConfig) {
-        this.jwtConfig = jwtConfig;
-    }
 
 
     /**

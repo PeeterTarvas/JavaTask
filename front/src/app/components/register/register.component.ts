@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AuthenticationService} from "../../services/authentication.service";
+import {AuthenticationService} from "../../services/validation/authentication.service";
 import {Router} from "@angular/router";
 import {UserDto} from "../../dtos/user-dto";
-import {UserWebRequestServiceService} from "../../services/user-web-request-service.service";
+import {UserWebRequestServiceService} from "../../services/request/user-web-request-service.service";
 
 /**
  * This component meant for the user to register their account.

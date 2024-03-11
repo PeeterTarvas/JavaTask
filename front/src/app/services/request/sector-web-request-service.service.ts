@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {UserDto} from "../dtos/user-dto";
-import {LoginResponse} from "../dtos/login-response";
+import {UserDto} from "../../dtos/user-dto";
+import {LoginResponse} from "../../dtos/login-response";
 import {ConnectionService} from "./connection.service";
-import {SectorDto} from "../dtos/sector-dto";
+import {SectorDto} from "../../dtos/sector-dto";
 
 /**
  *  Connection service for handling sector related request making

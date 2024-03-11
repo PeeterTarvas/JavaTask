@@ -1,6 +1,6 @@
 package com.test.helmes.servicetests;
 
-import com.test.helmes.config.jwt.JwtTokenProvider;
+import com.test.helmes.config.security.jwt.JwtTokenProvider;
 import com.test.helmes.dbos.UserDbo;
 import com.test.helmes.dtos.LoginResponseDto;
 import com.test.helmes.dtos.UserDto;
@@ -16,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {ConnectionService} from "./connection.service";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {LoginResponse} from "../dtos/login-response";
+import {LoginResponse} from "../../dtos/login-response";
 
 /**
  *  Connection service for handling user related request making used in Authentication service
@@ -11,7 +11,7 @@ import {LoginResponse} from "../dtos/login-response";
 @Injectable({
   providedIn: 'root'
 })
-export class UserWebRequestServiceService extends ConnectionService{
+export class UserWebRequestServiceService extends ConnectionService {
 
   constructor(httpClient: HttpClient) {
     super(httpClient);

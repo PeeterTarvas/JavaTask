@@ -2,10 +2,13 @@ package com.test.helmes.services;
 
 import com.test.helmes.dbos.UserDbo;
 import com.test.helmes.repositories.UserRepository;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 
@@ -14,17 +17,14 @@ import java.util.Optional;
  * springboot security.
  * This is a helper service used in JwtRequestFilter.
  */
+@Validated
+@AllArgsConstructor
 @Service
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
     private final UserRepository userRepository;
     private final MapperService mapperService;
 
-    @Autowired
-    public UserDetailsService(UserRepository userRepository, MapperService mapperService) {
-        this.userRepository = userRepository;
-        this.mapperService = mapperService;
-    }
 
     /**
      * Method that overrides the loadUserByUsername in the original UserDetailsService.

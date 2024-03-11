@@ -9,15 +9,22 @@ import com.test.helmes.repositories.CompanyRepository;
 import com.test.helmes.repositories.UserCompanyReferenceRepository;
 import com.test.helmes.repositories.UserRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.test.helmes.errors.Error;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 
 /**
  * Service for handling all company related logic.
  */
+@Validated
+@AllArgsConstructor
 @Service
 public class CompanyService {
 
@@ -25,18 +32,6 @@ public class CompanyService {
     private final MapperService mapperService;
     private final UserRepository userRepository;
     private final UserCompanyReferenceRepository userCompanyReferenceRepository;
-
-    @Autowired
-    public CompanyService(CompanyRepository companyRepository,
-                          MapperService mapperService,
-                          UserRepository userRepository,
-                          UserCompanyReferenceRepository userCompanyReferenceRepository
-                          ) {
-        this.companyRepository = companyRepository;
-        this.mapperService = mapperService;
-        this.userRepository = userRepository;
-        this.userCompanyReferenceRepository = userCompanyReferenceRepository;
-    }
 
 
     /**
@@ -48,7 +43,7 @@ public class CompanyService {
      * @throws Error if user has invalid details about company or user is not present.
      */
     @Transactional()
-    public void saveCompany(String username, CompanyDto companyDto) throws Error {
+    public void saveCompany(@NotBlank String username, @Valid CompanyDto companyDto) throws Error {
         Optional<UserDbo> userDbo = userRepository.getUserDboByUsername(username);
         if (userDbo.isPresent()) {
             saveNewCompany(userDbo.get(), companyDto);
@@ -66,12 +61,15 @@ public class CompanyService {
      * @throws Error if the details of the company are wrong or user is not present.
      */
     @Transactional()
-    public void updateCompany(String username, CompanyDto companyDto) throws Error {
+    public void updateCompany(@NotBlank String username, @Valid CompanyDto companyDto) throws Error {
         Optional<UserDbo> userDbo = userRepository.getUserDboByUsername(username);
         if (userDbo.isPresent()) {
             Optional<UserCompanyReferenceDbo> userCompanyReference = userHasCompany(userDbo.get());
-            userCompanyReference.ifPresent(userCompanyReferenceDbo ->
-                    updateCompanyDetails(companyDto, userCompanyReferenceDbo));
+            if (userCompanyReference.isPresent()) {
+                        updateCompanyDetails(companyDto, userCompanyReference.get());
+            } else {
+                throw new Error("Company does not exist!");
+            }
         } else {
             throw new Error("Missing input!");
         }
@@ -89,7 +87,7 @@ public class CompanyService {
      * @return an optional of the company data transfer object(CompanyDto).
      */
     @Transactional()
-    public Optional<CompanyDto> getUsersCompany(String username) throws Error {
+    public Optional<CompanyDto> getUsersCompany(@NotBlank String username) throws Error {
         Optional<UserDbo> userDbo = userRepository.getUserDboByUsername(username);
         if (userDbo.isPresent()) {
             Optional<UserCompanyReferenceDbo> userCompanyReferenceDbo = userHasCompany(userDbo.get());
@@ -109,7 +107,7 @@ public class CompanyService {
      * Method for updating company in the database. This is called in updateCompany method.
      * if the user already has a company in the database. Then that company is updated with the new details.
      */
-    private void updateCompanyDetails(CompanyDto companyDto, UserCompanyReferenceDbo userCompanyReferenceDbo) {
+    private void updateCompanyDetails(@Valid CompanyDto companyDto, @NotNull UserCompanyReferenceDbo userCompanyReferenceDbo) {
         CompanyDbo company = userCompanyReferenceDbo.getCompanyReference();
         company.setCompanyName(companyDto.getCompanyName());
         company.setCompanySectorId(companyDto.getCompanySectorId());
@@ -123,7 +121,7 @@ public class CompanyService {
      * @param userDbo that holds the details of the user whos company we are searching for.
      * @return an Optional of the user and company reference object.
      */
-    private Optional<UserCompanyReferenceDbo> userHasCompany(UserDbo userDbo) {
+    private Optional<UserCompanyReferenceDbo> userHasCompany(@Valid UserDbo userDbo) {
         return userCompanyReferenceRepository.getUserCompanyReferenceDboByUserReference(userDbo);
     }
 
@@ -133,7 +131,7 @@ public class CompanyService {
      * @param userDbo that holds the user database object.
      * @param companyDto that holds the company database object.
      */
-    private void saveNewCompany(UserDbo userDbo, CompanyDto companyDto) {
+    private void saveNewCompany(@NotNull UserDbo userDbo, @Valid CompanyDto companyDto) {
         companyRepository.saveCompany(mapperService.convertToCompanyDbo(companyDto));
         Optional<CompanyDbo> company = companyRepository.getCompanyDboByCompanyName(companyDto.getCompanyName());
         UserCompanyReferenceDbo userCompanyReferenceDbo = mapperService.createUserCompanyReferenceDbo(userDbo, company.get());
