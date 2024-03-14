@@ -21,6 +21,7 @@ public class UserDto extends User {
     private String userId;
     @NotBlank
     private String username;
+    @ToString.Exclude
     @NotBlank
     private String password;
 

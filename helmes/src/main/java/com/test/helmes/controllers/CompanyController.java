@@ -86,7 +86,7 @@ public class CompanyController {
                         companyDto.get());
             }
         } catch (Error ignored) {
-            log.info("Error when getting a company " + "for user: " + username + " with error: " + ignored.getMessage());
+            log.error("Error when getting a company " + "for user: " + username + " with error: " + ignored.getMessage());
         }
         return responseHandler.returnResponse(HttpStatus.OK);}
 

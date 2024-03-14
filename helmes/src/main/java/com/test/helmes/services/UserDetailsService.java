@@ -2,9 +2,7 @@ package com.test.helmes.services;
 
 import com.test.helmes.dbos.UserDbo;
 import com.test.helmes.repositories.UserRepository;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

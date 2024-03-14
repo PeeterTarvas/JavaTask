@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 /**
  * This class is for conversion methods, i.e. convert from dto to dbo or vice versa.
  */
-
 @Service
 public class MapperService {
 
