@@ -1,9 +1,10 @@
-package com.test.helmes.config;
+package com.test.helmes.config.security;
 
 
-import com.test.helmes.config.jwt.JwtRequestFilter;
-import com.test.helmes.config.jwt.RestAuthenticationEntryPoint;
+import com.test.helmes.config.security.jwt.JwtRequestFilter;
+import com.test.helmes.config.security.jwt.RestAuthenticationEntryPoint;
 import com.test.helmes.services.UserDetailsService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,11 +12,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,19 +26,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  */
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfig {
 
     private final JwtRequestFilter jwtRequestFilter;
     private final RestAuthenticationEntryPoint authenticationEntryPoint;
     private final UserDetailsService myUserDetailsService;
-
-    @Autowired
-    public SecurityConfig(JwtRequestFilter jwtRequestFilter, RestAuthenticationEntryPoint authenticationEntryPoint,
-                          UserDetailsService myUserDetailsService) {
-        this.jwtRequestFilter = jwtRequestFilter;
-        this.authenticationEntryPoint = authenticationEntryPoint;
-        this.myUserDetailsService = myUserDetailsService;
-    }
 
     /**
      * This method configures the security filter chain for your Spring Security configuration.
@@ -64,6 +56,7 @@ public class SecurityConfig {
                         .requestMatchers("/company/**").authenticated()
                         .requestMatchers("/user/**").permitAll()
                         .requestMatchers("/sector/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

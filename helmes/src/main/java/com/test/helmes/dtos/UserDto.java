@@ -1,10 +1,9 @@
 package com.test.helmes.dtos;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
@@ -16,10 +15,14 @@ import java.util.Collections;
  */
 @Setter
 @Getter
+@ToString
 public class UserDto extends User {
 
     private String userId;
+    @NotBlank
     private String username;
+    @ToString.Exclude
+    @NotBlank
     private String password;
 
     public UserDto(String username, String password, Collection<? extends GrantedAuthority> authorities) {

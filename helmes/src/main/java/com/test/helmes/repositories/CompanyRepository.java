@@ -1,8 +1,9 @@
 package com.test.helmes.repositories;
 
 import com.test.helmes.dbos.CompanyDbo;
-import com.test.helmes.errors.NoDataExistsException;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -12,6 +13,7 @@ import java.util.Optional;
 /**
  * Repository that references helmes.user_company_reference table in the database.
  */
+@Valid
 @Repository
 public interface CompanyRepository extends JpaRepository<CompanyDbo, Integer> {
 
@@ -23,7 +25,7 @@ public interface CompanyRepository extends JpaRepository<CompanyDbo, Integer> {
         try {
             saveAndFlush(companyDbo);
         } catch (DataIntegrityViolationException ex) {
-            throw new NoDataExistsException("Company name already exists: " + companyDbo.getCompanyName());
+            throw new Error("Company name already exists: " + companyDbo.getCompanyName());
         }
     }
 
@@ -32,6 +34,6 @@ public interface CompanyRepository extends JpaRepository<CompanyDbo, Integer> {
      * @param companyName of the company that is requested.
      * @return an optional of the company object
      */
-    Optional<CompanyDbo> getCompanyDboByCompanyName(String companyName);
+    Optional<CompanyDbo> getCompanyDboByCompanyName(@NotBlank String companyName);
 
 }

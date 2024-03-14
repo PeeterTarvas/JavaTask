@@ -3,7 +3,7 @@ package com.test.helmes.servicetests;
 import com.test.helmes.dbos.SectorDbo;
 import com.test.helmes.dtos.SectorDto;
 import com.test.helmes.repositories.SectorRepository;
-import com.test.helmes.services.ConverterService;
+import com.test.helmes.services.MapperService;
 import com.test.helmes.services.SectorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ public class SectorServiceTest {
     private SectorRepository sectorRepository;
 
     @MockBean
-    private ConverterService converterService;
+    private MapperService mapperService;
 
     @Autowired
     private SectorService sectorService;
@@ -39,7 +39,7 @@ public class SectorServiceTest {
     @BeforeEach
     public void setUp() {
         Mockito.reset(sectorRepository);
-        Mockito.reset(converterService);
+        Mockito.reset(mapperService);
     }
 
     /**
@@ -58,8 +58,8 @@ public class SectorServiceTest {
         );
 
         when(sectorRepository.findAll()).thenReturn(sectorDbos);
-        when(converterService.convertToSectorDto(sectorDbos.get(0))).thenReturn(expectedSectorDtos.get(0));
-        when(converterService.convertToSectorDto(sectorDbos.get(1))).thenReturn(expectedSectorDtos.get(1));
+        when(mapperService.convertToSectorDto(sectorDbos.get(0))).thenReturn(expectedSectorDtos.get(0));
+        when(mapperService.convertToSectorDto(sectorDbos.get(1))).thenReturn(expectedSectorDtos.get(1));
 
         List<SectorDto> resultSectorDtos = sectorService.getSectorDtos();
 

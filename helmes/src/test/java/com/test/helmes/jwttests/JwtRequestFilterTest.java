@@ -1,7 +1,7 @@
 package com.test.helmes.jwttests;
 
-import com.test.helmes.config.jwt.JwtRequestFilter;
-import com.test.helmes.config.jwt.JwtTokenProvider;
+import com.test.helmes.config.security.jwt.JwtRequestFilter;
+import com.test.helmes.config.security.jwt.JwtTokenProvider;
 import com.test.helmes.services.UserDetailsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest

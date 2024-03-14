@@ -1,14 +1,25 @@
 package com.test.helmes.errors;
 
-/**
- * Error response to be sent to the front-end when something is wrong.
- */
-public class ErrorResponse {
-    private String error;
-    private String message;
+import lombok.Getter;
+import lombok.Setter;
 
-    public ErrorResponse(String error, String message) {
-        this.error = error;
-        this.message = message;
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Setter
+public class ErrorResponse {
+
+    private List<Error> errors = new ArrayList<>();
+
+    public void addToResponse(Error error) {
+        errors.add(error);
+    }
+
+    @Override
+    public String toString() {
+        return "ErrorResponse{" +
+                "errors=" + errors +
+                '}';
     }
 }

@@ -4,12 +4,12 @@ import com.test.helmes.dbos.CompanyDbo;
 import com.test.helmes.dbos.UserCompanyReferenceDbo;
 import com.test.helmes.dbos.UserDbo;
 import com.test.helmes.dtos.CompanyDto;
-import com.test.helmes.errors.InvalidDataException;
+import com.test.helmes.errors.Error;
 import com.test.helmes.repositories.CompanyRepository;
 import com.test.helmes.repositories.UserCompanyReferenceRepository;
 import com.test.helmes.repositories.UserRepository;
 import com.test.helmes.services.CompanyService;
-import com.test.helmes.services.ConverterService;
+import com.test.helmes.services.MapperService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -34,7 +34,7 @@ public class CompanyServiceTest {
     private CompanyRepository companyRepository;
 
     @MockBean
-    private ConverterService converterService;
+    private MapperService mapperService;
 
     @MockBean
     private UserRepository userRepository;
@@ -45,11 +45,11 @@ public class CompanyServiceTest {
     @Autowired
     private CompanyService companyService;
 
-
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
+
 
     /**
      * This tests the saving of a company, should be successful.
@@ -63,15 +63,15 @@ public class CompanyServiceTest {
         UserCompanyReferenceDbo userCompanyReferenceDbo = new UserCompanyReferenceDbo(1L, userDbo, companyDbo);
 
         when(userRepository.getUserDboByUsername(username)).thenReturn(Optional.of(userDbo));
-        when(converterService.convertToCompanyDbo(companyDto)).thenReturn(companyDbo);
-        when(converterService.createUserCompanyReferenceDbo(userDbo, companyDbo)).thenReturn(userCompanyReferenceDbo);
+        when(mapperService.convertToCompanyDbo(companyDto)).thenReturn(companyDbo);
+        when(mapperService.createUserCompanyReferenceDbo(userDbo, companyDbo)).thenReturn(userCompanyReferenceDbo);
         when(companyRepository.getCompanyDboByCompanyName("testCompany")).thenReturn(Optional.of(companyDbo));
         when(userCompanyReferenceRepository.save(userCompanyReferenceDbo)).thenReturn(userCompanyReferenceDbo);
 
         assertDoesNotThrow(() -> companyService.saveCompany(username, companyDto));
 
         verify(userRepository, times(1)).getUserDboByUsername(username);
-        verify(converterService, times(1)).convertToCompanyDbo(companyDto);
+        verify(mapperService, times(1)).convertToCompanyDbo(companyDto);
         verify(userCompanyReferenceRepository, times(1)).save(any(UserCompanyReferenceDbo.class));
     }
 
@@ -85,10 +85,10 @@ public class CompanyServiceTest {
 
         when(userRepository.getUserDboByUsername(username)).thenReturn(Optional.empty());
 
-        assertThrows(InvalidDataException.class, () -> companyService.saveCompany(username, companyDto));
+        assertThrows(Error.class, () -> companyService.saveCompany(username, companyDto));
 
         verify(userRepository, times(1)).getUserDboByUsername(username);
-        verify(converterService, never()).convertToCompanyDbo(companyDto);
+        verify(mapperService, never()).convertToCompanyDbo(companyDto);
         verify(userCompanyReferenceRepository, never()).save(any(UserCompanyReferenceDbo.class));
     }
 
@@ -124,7 +124,7 @@ public class CompanyServiceTest {
 
         when(userRepository.getUserDboByUsername(username)).thenReturn(Optional.empty());
 
-        assertThrows(InvalidDataException.class, () -> companyService.updateCompany(username, companyDto));
+        assertThrows(Error.class, () -> companyService.updateCompany(username, companyDto));
 
         verify(userRepository, times(1)).getUserDboByUsername(username);
         verify(userCompanyReferenceRepository, never()).getUserCompanyReferenceDboByUserReference(any(UserDbo.class));
@@ -142,7 +142,7 @@ public class CompanyServiceTest {
 
         when(userRepository.getUserDboByUsername(username)).thenReturn(Optional.of(userDbo));
 
-        assertThrows(InvalidDataException.class, () -> companyService.updateCompany(username, companyDto));
+        assertThrows(Error.class, () -> companyService.updateCompany(username, companyDto));
 
         verify(userRepository, times(1)).getUserDboByUsername(username);
         verify(companyRepository, never()).save(any(CompanyDbo.class));
@@ -152,7 +152,7 @@ public class CompanyServiceTest {
      * This method tests getting users company successfully.
      */
     @Test
-    public void testGetUsersCompanySuccess() {
+    public void testGetUsersCompanySuccess() throws Error {
         String username = "testUser";
         UserDbo userDbo = new UserDbo();
         CompanyDbo companyDbo = new CompanyDbo();
@@ -163,7 +163,7 @@ public class CompanyServiceTest {
         when(userRepository.getUserDboByUsername(username)).thenReturn(Optional.of(userDbo));
         when(userCompanyReferenceRepository.getUserCompanyReferenceDboByUserReference(userDbo))
                 .thenReturn(Optional.of(userCompanyReferenceDbo));
-        when(converterService.convertToCompanyDto(companyDbo)).thenReturn(companyDto);
+        when(mapperService.convertToCompanyDto(companyDbo)).thenReturn(companyDto);
 
         Optional<CompanyDto> result = companyService.getUsersCompany(username);
 
@@ -177,21 +177,23 @@ public class CompanyServiceTest {
      * This method tests getting a users company when user is not found.
      */
     @Test
-    public void testGetUsersCompanyUserNotFound() {
+    public void testGetUsersCompanyUserNotFound() throws Error {
         String username = "testUser";
 
         when(userRepository.getUserDboByUsername(username)).thenReturn(Optional.empty());
 
-        Optional<CompanyDto> result = companyService.getUsersCompany(username);
-
-        assertFalse(result.isPresent());
+        Error error = assertThrows(
+                Error.class,
+                () -> companyService.getUsersCompany(username)
+        );
+        assertEquals("Bad input!", error.getMessage());
     }
 
     /**
      * Tests getting a users company when user has no company.
      */
     @Test
-    public void testGetUsersCompanyUserHasNoCompany() {
+    public void testGetUsersCompanyUserHasNoCompany() throws Error {
         String username = "testUser";
         UserDbo userDbo = new UserDbo();
 
@@ -199,105 +201,12 @@ public class CompanyServiceTest {
         when(userCompanyReferenceRepository.getUserCompanyReferenceDboByUserReference(userDbo))
                 .thenReturn(Optional.empty());
 
-        Optional<CompanyDto> result = companyService.getUsersCompany(username);
-
-        assertFalse(result.isPresent());
+        Error error = assertThrows(
+                Error.class,
+                () -> companyService.getUsersCompany(username)
+        );
+        assertEquals("Bad input!", error.getMessage());
     }
 
-    /**
-     * Tests isValid method that controls company dto validity, this tests a valid company.
-     */
-    @Test
-    public void testIsValidValidData() {
-        CompanyDto companyDto = new CompanyDto("Test Company", 1, true);
-
-        boolean result = companyService.isValid(companyDto);
-
-        assertTrue(result);
-    }
-
-    /**
-     * This tests isValid method but with invalid company name.
-     */
-    @Test
-    public void testIsValidInvalidName() {
-        CompanyDto companyDto = new CompanyDto("", 1, true);
-
-        boolean result = companyService.isValid(companyDto);
-
-        assertFalse(result);
-    }
-
-    /**
-     * Test isValid method when company does not have sectorId.
-     */
-    @Test
-    public void testIsValidNullSectorId() {
-        CompanyDto companyDto = new CompanyDto("Test Company", null, true);
-
-        boolean result = companyService.isValid(companyDto);
-
-        assertFalse(result);
-    }
-
-    /**
-     * Tests isValid when company has invalid terms.
-     */
-    @Test
-    public void testIsValidInvalidTerms() {
-        CompanyDto companyDto = new CompanyDto("Test Company", 1, false);
-
-        boolean result = companyService.isValid(companyDto);
-
-        assertFalse(result);
-    }
-
-    /**
-     * Tests method isValidName when name is valid.
-     */
-    @Test
-    public void testIsValidNameValidName() {
-        String name = "Test Company";
-
-        boolean result = companyService.isValidName(name);
-
-        assertTrue(result);
-    }
-
-    /**
-     * Tests isValidName when name is empty.
-     */
-    @Test
-    public void testIsValidNameEmptyName() {
-        String name = "";
-
-        boolean result = companyService.isValidName(name);
-
-        assertFalse(result);
-    }
-
-    /**
-     * Tests isValidName when name is null.
-     */
-    @Test
-    public void testIsValidNameNullName() {
-        String name = null;
-
-        boolean result = companyService.isValidName(name);
-
-        assertFalse(result);
-    }
-
-    /**
-     * Tests when name is a whitespace.
-     */
-    @Test
-    public void testIsValidNameWhitespaceName() {
-        String name = "   ";
-
-        boolean result = companyService.isValidName(name);
-
-        assertFalse(result);
-    }
 
 }

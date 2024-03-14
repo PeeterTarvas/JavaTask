@@ -2,6 +2,7 @@ package com.test.helmes.repositories;
 
 import com.test.helmes.dbos.UserCompanyReferenceDbo;
 import com.test.helmes.dbos.UserDbo;
+import jakarta.validation.Valid;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,9 +17,9 @@ public interface UserCompanyReferenceRepository extends JpaRepository<UserCompan
 
     /**
      * This method makes the reference object accessible by the userDbo.
-     * @param userDbo is holds the users details whos company we want to get with the reference object.
+     * @param userDbo is holds the users details who's company we want to get with the reference object.
      * @return optional of the reference object.
      */
-    Optional<UserCompanyReferenceDbo> getUserCompanyReferenceDboByUserReference(UserDbo userDbo);
+    Optional<UserCompanyReferenceDbo> getUserCompanyReferenceDboByUserReference(@Valid UserDbo userDbo);
 
 }

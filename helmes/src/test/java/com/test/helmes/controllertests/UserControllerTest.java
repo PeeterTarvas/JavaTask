@@ -1,9 +1,11 @@
 package com.test.helmes.controllertests;
 
 import com.test.helmes.controllers.UserController;
+import com.test.helmes.controllers.helper.ResponseHandler;
 import com.test.helmes.dtos.LoginResponseDto;
 import com.test.helmes.dtos.UserDto;
-import com.test.helmes.errors.InvalidDataException;
+import com.test.helmes.errors.Error;
+import com.test.helmes.errors.ErrorResponse;
 import com.test.helmes.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +30,9 @@ public class UserControllerTest {
 
     @Autowired
     private UserController userController;
+
+    @Autowired
+    private ResponseHandler responseHandler;
 
     @BeforeEach
     public void setUp() {
@@ -56,14 +61,17 @@ public class UserControllerTest {
     @Test
     public void testRegisterUserInvalidData() throws Exception {
         UserDto userDto = new UserDto("invalid_username", "password", null);
-        String errorMessage = "Invalid data error message";
-        doThrow(new InvalidDataException(errorMessage)).when(userService).register(userDto);
+        String errorMessage = "No username or password";
+
+        ErrorResponse errorResponse = responseHandler.convertErrorToErrorResponse(new Error(errorMessage));
+
+        doThrow(new Error(errorMessage)).when(userService).register(userDto);
 
         ResponseEntity<?> responseEntity = userController.registerUser(userDto);
 
         verify(userService, times(1)).register(userDto);
-        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
-        assertEquals(errorMessage, responseEntity.getBody());
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(errorResponse.toString(), responseEntity.getBody().toString());
     }
 
     /**
@@ -88,14 +96,17 @@ public class UserControllerTest {
     @Test
     public void testLoginInvalidData() throws Exception {
         UserDto userDto = new UserDto("invalid_username", "password", null);
-        String errorMessage = "Invalid data error message";
-        when(userService.login(userDto)).thenThrow(new InvalidDataException(errorMessage));
+        String errorMessage = "Invalid username or password";
+
+        ErrorResponse errorResponse = responseHandler.convertErrorToErrorResponse(new Error(errorMessage));
+
+        when(userService.login(userDto)).thenThrow(new Error(errorMessage));
 
         ResponseEntity<?> responseEntity = userController.login(userDto);
 
         verify(userService, times(1)).login(userDto);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        assertEquals(errorMessage, responseEntity.getBody());
+        assertEquals(errorResponse.toString(), responseEntity.getBody().toString());
     }
 
 }

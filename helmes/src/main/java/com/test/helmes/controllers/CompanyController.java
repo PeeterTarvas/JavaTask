@@ -1,30 +1,33 @@
 package com.test.helmes.controllers;
 
+import com.test.helmes.controllers.helper.ResponseHandler;
 import com.test.helmes.dtos.CompanyDto;
-import com.test.helmes.errors.ErrorResponse;
-import com.test.helmes.errors.InvalidDataException;
+import com.test.helmes.errors.Error;
 import com.test.helmes.services.CompanyService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
  * This is the endpoint controller for all the methods that are related to the company objects logic.
  */
+@Slf4j
+@Validated
 @RestController
+@AllArgsConstructor
 @RequestMapping("/company")
 public class CompanyController {
 
     private final CompanyService companyService;
 
-    @Autowired
-    public CompanyController(CompanyService companyService) {
-        this.companyService = companyService;
-    }
+    private final ResponseHandler responseHandler;
 
     /**
      * Saves the company, if company doesn't have valid attributes it throws an error.
@@ -32,14 +35,17 @@ public class CompanyController {
      * @param username of the player that requests the update to be made.
      */
     @PostMapping("/{username}/save")
-    public ResponseEntity<?> saveCompany(@RequestBody CompanyDto companyDto, @PathVariable String username) {
+    public ResponseEntity<?> saveCompany(@Valid @RequestBody CompanyDto companyDto, @PathVariable @NotBlank String username) {
         try {
+            log.info("Saving company: " + companyDto.toString() + "for user: " + username);
             companyService.saveCompany(username, companyDto);
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("{\"message\": \"Created company: " + companyDto.getCompanyName() + "\"}");
-        } catch (InvalidDataException e) {
-            ErrorResponse errorResponse = new ErrorResponse("Invalid data", e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(errorResponse);
+            log.info("Saved company: " + companyDto.toString() + "for user: " + username);
+            return responseHandler.returnResponse(HttpStatus.CREATED,
+                    "{\"message\": \"Created company: " + companyDto.getCompanyName() + "\"}");
+        } catch (Error error) {
+            log.error("Error when saving a company: " + companyDto.toString() + "for user: "
+                    + username + " with error " + error.getMessage());
+            return responseHandler.returnErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, error);
         }
     }
 
@@ -50,14 +56,17 @@ public class CompanyController {
      * @return a response entity containing either an OK response or an error.
      */
     @PutMapping("/{username}/update")
-    public ResponseEntity<?> updateCompany(@RequestBody CompanyDto companyDto, @PathVariable String username) {
+    public ResponseEntity<?> updateCompany(@Valid @RequestBody CompanyDto companyDto, @PathVariable @NotBlank String username) {
         try {
+            log.info("Update company: " + companyDto.toString() + "for user: " + username);
             companyService.updateCompany(username, companyDto);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"message\": \"Updated company: " + companyDto.getCompanyName() + "\"}");
-        } catch (InvalidDataException e) {
-            ErrorResponse errorResponse = new ErrorResponse("Invalid data", e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(errorResponse);
+            log.info("Updated company: " + companyDto.toString() + "for user: " + username);
+            return responseHandler.returnResponse(HttpStatus.OK,
+                    "{\"message\": \"Updated company: " + companyDto.getCompanyName() + "\"}");
+        } catch (Error error) {
+            log.error("Error when updating a company: " + companyDto.toString() + "for user: "
+                    + username + " with error " + error.getMessage());
+            return responseHandler.returnErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, error);
         }
     }
 
@@ -67,12 +76,18 @@ public class CompanyController {
      * @return the users company if it exists.
      */
     @GetMapping("/{username}/get")
-    public ResponseEntity<?> getUsersCompany(@PathVariable String username) {
-        Optional<CompanyDto> companyDto = companyService.getUsersCompany(username);
-        if (companyDto.isPresent()) {
-            return ResponseEntity.status(HttpStatus.OK).body(companyDto.get());
+    public ResponseEntity<?> getUsersCompany(@PathVariable @NotBlank String username) {
+        try {
+            log.info("Get company " + "for user: " + username);
+            Optional<CompanyDto> companyDto = companyService.getUsersCompany(username);
+            if (companyDto.isPresent()) {
+                log.info("Return company: " + companyDto.get().toString() + "for user: " + username);
+                return responseHandler.returnResponse(HttpStatus.OK,
+                        companyDto.get());
+            }
+        } catch (Error ignored) {
+            log.error("Error when getting a company " + "for user: " + username + " with error: " + ignored.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
+        return responseHandler.returnResponse(HttpStatus.OK);}
 
 }

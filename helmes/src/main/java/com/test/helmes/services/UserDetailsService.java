@@ -2,10 +2,11 @@ package com.test.helmes.services;
 
 import com.test.helmes.dbos.UserDbo;
 import com.test.helmes.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 
@@ -14,17 +15,14 @@ import java.util.Optional;
  * springboot security.
  * This is a helper service used in JwtRequestFilter.
  */
+@Validated
+@AllArgsConstructor
 @Service
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
     private final UserRepository userRepository;
-    private final ConverterService converterService;
+    private final MapperService mapperService;
 
-    @Autowired
-    public UserDetailsService(UserRepository userRepository, ConverterService converterService) {
-        this.userRepository = userRepository;
-        this.converterService = converterService;
-    }
 
     /**
      * Method that overrides the loadUserByUsername in the original UserDetailsService.
@@ -35,11 +33,11 @@ public class UserDetailsService implements org.springframework.security.core.use
      * @throws UsernameNotFoundException if an account with that username doesn't exists.
      */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws Error {
         Optional<UserDbo> userDbo = userRepository.getUserDboByUsername(username);
         if (userDbo.isEmpty()) {
-            throw new UsernameNotFoundException("No user found");
+            throw new Error("No user found");
         }
-        return converterService.convertToUserDto(userDbo.get());
+        return mapperService.convertToUserDto(userDbo.get());
     }
 }

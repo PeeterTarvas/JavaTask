@@ -1,9 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {SectorDto} from "../../dtos/sector-dto";
 import {CompanyDto} from "../../dtos/company-dto";
-import {CompanyWebRequestServiceService} from "../../services/company-web-request-service.service";
+import {CompanyWebRequestServiceService} from "../../services/request/company-web-request-service.service";
 import {SelectorSelectComponent} from "../selector-select/selector-select.component";
-import {AuthenticationService} from "../../services/authentication.service";
+import {AuthenticationService} from "../../services/validation/authentication.service";
 import {Router} from "@angular/router";
 
 /**
@@ -16,6 +16,7 @@ import {Router} from "@angular/router";
   styleUrls: ['./input-form.component.css']
 })
 export class InputFormComponent implements OnInit {
+
     name: string = "";
     sector: SectorDto | undefined = undefined;
     terms: boolean = false;

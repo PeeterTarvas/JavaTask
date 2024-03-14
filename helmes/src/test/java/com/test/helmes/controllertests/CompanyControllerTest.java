@@ -3,7 +3,7 @@ package com.test.helmes.controllertests;
 
 import com.test.helmes.controllers.CompanyController;
 import com.test.helmes.dtos.CompanyDto;
-import com.test.helmes.errors.InvalidDataException;
+import com.test.helmes.errors.Error;
 import com.test.helmes.services.CompanyService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ public class CompanyControllerTest {
      * Test for saving a company with valid data in the application.
      */
     @Test
-    public void testSaveCompanySuccess() throws InvalidDataException {
+    public void testSaveCompanySuccess() throws Error {
         CompanyDto companyDto = new CompanyDto("test", 1, true);
         String username = "testUser";
 
@@ -60,11 +60,11 @@ public class CompanyControllerTest {
      * Test saving a company with invalid data.
      */
     @Test
-    public void testSaveCompanyInvalidDataException() throws InvalidDataException {
+    public void testSaveCompanyInvalidDataException() throws Error {
         CompanyDto companyDto = new CompanyDto("test", 1, true);
         String username = "testUser";
 
-        doThrow(new InvalidDataException("Invalid data")).when(companyService).saveCompany(username, companyDto);
+        doThrow(new Error("Invalid data")).when(companyService).saveCompany(username, companyDto);
 
         ResponseEntity<?> responseEntity = companyController.saveCompany(companyDto, username);
 
@@ -75,7 +75,7 @@ public class CompanyControllerTest {
      * Test updating a company with valid data.
      */
     @Test
-    public void testUpdateCompanySuccess() throws InvalidDataException {
+    public void testUpdateCompanySuccess() throws Error {
         CompanyDto companyDto = new CompanyDto("test", 1, true);
         companyDto.setCompanyName("Test Company");
         String username = "testUser";
@@ -91,11 +91,11 @@ public class CompanyControllerTest {
      * Test updating a company with invalid data.
      */
     @Test
-    public void testUpdateCompanyInvalidDataException() throws InvalidDataException {
+    public void testUpdateCompanyInvalidDataException() throws Error {
         CompanyDto companyDto = new CompanyDto("test", 1, true);
         String username = "testUser";
 
-        doThrow(new InvalidDataException("Invalid data")).when(companyService).updateCompany(username, companyDto);
+        doThrow(new Error("Invalid data")).when(companyService).updateCompany(username, companyDto);
 
         ResponseEntity<?> responseEntity = companyController.updateCompany(companyDto, username);
 
@@ -106,7 +106,7 @@ public class CompanyControllerTest {
      * Test for getting a user's company when the company exists.
      */
     @Test
-    public void testGetUsersCompanyExists() {
+    public void testGetUsersCompanyExists() throws Error {
         String username = "testUser";
         CompanyDto companyDto = new CompanyDto("test", 1, true);
         companyDto.setCompanyName("Test Company");
@@ -128,7 +128,7 @@ public class CompanyControllerTest {
      * Test for getting a user's company when the company does not exist. It still returns OK but the body is empty.
      */
     @Test
-    public void testGetUsersCompanyNotFound() {
+    public void testGetUsersCompanyNotFound() throws Error {
         String username = "testUser";
 
         when((companyService).getUsersCompany(username)).thenReturn(Optional.empty());

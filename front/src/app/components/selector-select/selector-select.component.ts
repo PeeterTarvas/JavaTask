@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ConnectionService} from "../../services/connection.service";
+import {ConnectionService} from "../../services/request/connection.service";
 import {SectorDto} from "../../dtos/sector-dto";
 import {map} from "rxjs";
-import {SectorWebRequestServiceService} from "../../services/sector-web-request-service.service";
+import {SectorWebRequestServiceService} from "../../services/request/sector-web-request-service.service";
 
 @Component({
   selector: 'app-selector-select',

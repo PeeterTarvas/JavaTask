@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {UserDto} from "../dtos/user-dto";
+import {UserDto} from "../../dtos/user-dto";
 
 /**
  * This class is for connecting to the back-end.
@@ -64,6 +64,7 @@ export class ConnectionService {
           resolve(response);
         },
         (error) => {
+          console.log(error)
           reject(error);
         }
       );

@@ -1,4 +1,4 @@
-package com.test.helmes.config.jwt;
+package com.test.helmes.config.security.jwt;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
