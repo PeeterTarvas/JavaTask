@@ -54,7 +54,6 @@ export class LoginPageComponent implements OnInit {
     const {username, password} = this.loginForm.value
     const loginRequest: UserDto = {username: username, password: password}
     this.authenticationService.login(loginRequest).then((response) => {
-      console.log(response)
       if (response instanceof Error) {
         this.errorMessage = response.message;
       } else {

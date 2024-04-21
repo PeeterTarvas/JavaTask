@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, map, Observable} from 'rxjs';
 import {LoginResponse} from "../../dtos/login-response";
 import {UserDto} from "../../dtos/user-dto";
-import {UserWebRequestServiceService} from "../request/user-web-request-service.service";
+import {UserWebRequestServiceService} from "../request/user/user-web-request-service.service";
 
 /**
  * This class is for handling user authentication and logging in.

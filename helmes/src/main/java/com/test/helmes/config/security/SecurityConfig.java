@@ -3,7 +3,7 @@ package com.test.helmes.config.security;
 
 import com.test.helmes.config.security.jwt.JwtRequestFilter;
 import com.test.helmes.config.security.jwt.RestAuthenticationEntryPoint;
-import com.test.helmes.services.UserDetailsService;
+import com.test.helmes.services.user.UserDetailsService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
