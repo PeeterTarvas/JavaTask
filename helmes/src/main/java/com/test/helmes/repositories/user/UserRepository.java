@@ -14,7 +14,7 @@ import java.util.Optional;
  */
 @Validated
 @Repository
-public interface UserRepository extends JpaRepository<UserDbo, Integer> {
+public interface UserRepository extends JpaRepository<UserDbo, Long> {
 
     /**
      * This method makes the users details accessible by the users username.
@@ -22,4 +22,7 @@ public interface UserRepository extends JpaRepository<UserDbo, Integer> {
      * @return users details object from the database.
      */
     Optional<UserDbo> getUserDboByUsername(@NotBlank String username);
+
+    Long deleteByUsername(@NotBlank String username);
+
 }
