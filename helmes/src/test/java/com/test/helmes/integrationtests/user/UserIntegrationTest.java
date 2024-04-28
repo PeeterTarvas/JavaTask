@@ -1,7 +1,7 @@
 package com.test.helmes.integrationtests.user;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.test.helmes.dtos.user.UserDto;
 import com.test.helmes.repositories.user.UserRepository;
 import jakarta.transaction.Transactional;
@@ -14,6 +14,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static com.test.helmes.helpers.JsonHelper.asJsonString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -30,25 +31,21 @@ public class UserIntegrationTest {
     private UserRepository userRepository;
     @Autowired
     private MockMvc mockMvc;
+    private UserDto userDto;
+    @BeforeAll
+    void setup() {
+        userDto = new UserDto("peeter", "supersecret", null);
 
-    private String asJsonString(final Object obj) {
-        try {
-            final ObjectMapper mapper = new ObjectMapper();
-            final String jsonContent = mapper.writeValueAsString(obj);
-            return jsonContent;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
+
 
     @Test
     @Order(1)
     void testUserCreation() throws Exception {
-        UserDto user = new UserDto("peeter", "supersecret", null);
         this.mockMvc.perform(
                 MockMvcRequestBuilders
                 .post("/user/register")
-                .content(asJsonString(user))
+                .content(asJsonString(userDto))
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
             ).andExpect(status().isCreated());
@@ -58,11 +55,10 @@ public class UserIntegrationTest {
     @Test
     @Order(2)
     void testUserLogin() throws Exception {
-        UserDto user = new UserDto("peeter", "supersecret", null);
         this.mockMvc.perform(
                 MockMvcRequestBuilders
                         .post("/user/register")
-                        .content(asJsonString(user))
+                        .content(asJsonString(userDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isCreated());
