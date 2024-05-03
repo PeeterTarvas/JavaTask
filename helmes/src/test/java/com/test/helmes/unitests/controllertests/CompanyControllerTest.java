@@ -116,7 +116,7 @@ public class CompanyControllerTest {
         CompanyDto responseBody = (CompanyDto) responseEntity.getBody();
         assertNotNull(responseBody);
         assertEquals("Test Company", responseBody.getCompanyName());
-        assertEquals(1, responseBody.getCompanySectorId());
+        assertEquals(6, responseBody.getCompanySectorId());
         assertTrue(responseBody.getCompanyTerms());
     }
 
@@ -161,9 +161,10 @@ public class CompanyControllerTest {
 
         doNothing().when(companyService).saveCompany(username, companyDto);
 
-        ResponseEntity<?> responseEntity = companyController.saveCompany(companyDto, username);
-
-        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+        assertThrows(
+                ConstraintViolationException.class,
+                () -> companyController.saveCompany(companyDto, username)
+        );
     }
 
     @Test
@@ -172,14 +173,17 @@ public class CompanyControllerTest {
 
         doNothing().when(companyService).saveCompany(username, companyDto);
 
-        assertThrows(ResponseEntity.getClass(), companyController.saveCompany(companyDto, username));
-
+        assertThrows(
+                ConstraintViolationException.class,
+                () -> companyController.saveCompany(companyDto, username)
+        );
 
         companyDto.setCompanySectorId(0);
 
-         companyController.saveCompany(companyDto, username);
-
-        //assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+        assertThrows(
+                ConstraintViolationException.class,
+                () -> companyController.saveCompany(companyDto, username)
+        );
 
 
     }
