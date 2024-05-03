@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         locations = "classpath:application-test.properties")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
-public class UserIntegrationTest {
+public class UserIntegrationTests {
 
     @Autowired
     private UserRepository userRepository;
