@@ -4,6 +4,7 @@ import com.test.helmes.controllers.company.CompanyController;
 import com.test.helmes.dtos.company.CompanyDto;
 import com.test.helmes.errors.Error;
 import com.test.helmes.services.company.CompanyService;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -33,9 +34,15 @@ public class CompanyControllerTest {
     @Autowired
     private CompanyController companyController;
 
+    private CompanyDto companyDto;
+    private String username;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+        companyDto =  new CompanyDto("test", 6, true);
+        username = "testUser";
+
     }
 
     /**
@@ -43,8 +50,6 @@ public class CompanyControllerTest {
      */
     @Test
     public void testSaveCompanySuccess() throws Error {
-        CompanyDto companyDto = new CompanyDto("test", 1, true);
-        String username = "testUser";
 
         doNothing().when(companyService).saveCompany(username, companyDto);
 
@@ -60,8 +65,6 @@ public class CompanyControllerTest {
      */
     @Test
     public void testSaveCompanyInvalidDataException() throws Error {
-        CompanyDto companyDto = new CompanyDto("test", 1, true);
-        String username = "testUser";
 
         doThrow(new Error("Invalid data")).when(companyService).saveCompany(username, companyDto);
 
@@ -75,9 +78,7 @@ public class CompanyControllerTest {
      */
     @Test
     public void testUpdateCompanySuccess() throws Error {
-        CompanyDto companyDto = new CompanyDto("test", 1, true);
         companyDto.setCompanyName("Test Company");
-        String username = "testUser";
 
         doNothing().when(companyService).updateCompany(username, companyDto);
 
@@ -91,8 +92,6 @@ public class CompanyControllerTest {
      */
     @Test
     public void testUpdateCompanyInvalidDataException() throws Error {
-        CompanyDto companyDto = new CompanyDto("test", 1, true);
-        String username = "testUser";
 
         doThrow(new Error("Invalid data")).when(companyService).updateCompany(username, companyDto);
 
@@ -106,8 +105,6 @@ public class CompanyControllerTest {
      */
     @Test
     public void testGetUsersCompanyExists() throws Error {
-        String username = "testUser";
-        CompanyDto companyDto = new CompanyDto("test", 1, true);
         companyDto.setCompanyName("Test Company");
 
         when(companyService.getUsersCompany(username)).thenReturn(Optional.of(companyDto));
@@ -128,7 +125,6 @@ public class CompanyControllerTest {
      */
     @Test
     public void testGetUsersCompanyNotFound() throws Error {
-        String username = "testUser";
 
         when((companyService).getUsersCompany(username)).thenReturn(Optional.empty());
 
@@ -137,5 +133,55 @@ public class CompanyControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
+    @Test
+    void testUserDtoHasMinimumAllowedSectorId() throws Error {
+        companyDto.setCompanySectorId(1);
+
+        doNothing().when(companyService).saveCompany(username, companyDto);
+
+        ResponseEntity<?> responseEntity = companyController.saveCompany(companyDto, username);
+
+        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+    }
+
+    @Test
+    void testUserDtoHasMaximumAllowedSectorId() throws Error {
+        companyDto.setCompanySectorId(80);
+
+        doNothing().when(companyService).saveCompany(username, companyDto);
+
+        ResponseEntity<?> responseEntity = companyController.saveCompany(companyDto, username);
+
+        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+    }
+
+    @Test
+    void testUserDtoHasOverMaximumAllowedSectorId() throws Error {
+        companyDto.setCompanySectorId(81);
+
+        doNothing().when(companyService).saveCompany(username, companyDto);
+
+        ResponseEntity<?> responseEntity = companyController.saveCompany(companyDto, username);
+
+        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+    }
+
+    @Test
+    void testUserDtoHasNegativeOrZeroAsSectorId() throws Error {
+        companyDto.setCompanySectorId(-1);
+
+        doNothing().when(companyService).saveCompany(username, companyDto);
+
+        assertThrows(ResponseEntity.getClass(), companyController.saveCompany(companyDto, username));
+
+
+        companyDto.setCompanySectorId(0);
+
+         companyController.saveCompany(companyDto, username);
+
+        //assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+
+
+    }
 
 }
