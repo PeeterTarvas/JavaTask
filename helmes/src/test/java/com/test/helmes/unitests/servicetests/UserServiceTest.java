@@ -81,7 +81,6 @@ public class UserServiceTest {
                 Error.class,
                 () -> userService.register(userDto)
         );
-        System.out.println(error.getMessage());
         assertEquals("User already exists", error.getMessage());
     }
 

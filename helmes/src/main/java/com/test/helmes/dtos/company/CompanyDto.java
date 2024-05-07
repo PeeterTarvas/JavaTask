@@ -1,8 +1,6 @@
 package com.test.helmes.dtos.company;
 
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 /**
@@ -19,6 +17,8 @@ public class CompanyDto {
     private String companyName;
 
     @NotNull
+    @Min(value = 1, message = "Must be a positive number")
+    @Max(value = 80, message = "Must not be over 80")
     private Integer companySectorId;
 
     @NotNull
