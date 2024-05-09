@@ -86,7 +86,7 @@ public class UserServiceTest {
 
 
     /**
-     * This tests user login with valid credentials.
+     * This tests user login with valid credentials with jwt.
      */
     @Test
     public void testLoginValidUser() throws Error {
